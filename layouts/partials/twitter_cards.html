@@ -1,0 +1,34 @@
+{{/* Minimal Twitter Card tags so builds succeed */}}
+
+<meta name="twitter:card" content="summary_large_image">
+
+{{ with .Site.Params.twitter }}
+<meta name="twitter:site" content="@{{ . }}">
+{{ end }}
+
+{{ with .Site.Params.twitter_creator }}
+<meta name="twitter:creator" content="@{{ . }}">
+{{ end }}
+
+<meta name="twitter:title" content="{{ .Title | plainify }}">
+{{ with .Description }}
+<meta name="twitter:description" content="{{ . | plainify }}">
+{{ else }}
+{{ with .Site.Params.description }}
+<meta name="twitter:description" content="{{ . | plainify }}">
+{{ end }}
+{{ end }}
+
+{{/* Image: prefer page featured_image, else site featured_image */}}
+{{ $img := "" }}
+{{ with .Params.featured_image }}{{ $img = . }}{{ end }}
+{{ if not $img }}
+  {{ with .Site.Params.featured_image }}{{ $img = . }}{{ end }}
+{{ end }}
+{{ if $img }}
+  {{ $url := $img }}
+  {{ if hasPrefix $img "/" }}
+    {{ $url = (printf "%s%s" .Site.BaseURL (strings.TrimPrefix "/" $img)) }}
+  {{ end }}
+  <meta name="twitter:image" content="{{ $url }}">
+{{ end }}
