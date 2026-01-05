@@ -2,3 +2,5 @@ public/
 resources/
 .DS_Store
 .hugo_build.lock
+# Hugo build output
+public/
