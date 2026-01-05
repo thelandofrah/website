@@ -1,11 +1,5 @@
 {{ define "body-extra-class" }}music-spectrum{{ end }}
-{{ define "header" }}
-<header>
-  <div class="bg-black pv3 ph3 ph4-ns">
-    {{ partials.Include "site-navigation.html" . }}
-  </div>
-</header>
-{{ end }}
+{{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
 {{ define "footer" }}{{ end }}
 
 {{ define "main" }}
@@ -154,28 +148,26 @@
 
   <h2 class="comic-collection-heading">Series</h2>
 
-  <div class="flex flex-wrap">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,360px));gap:2.2rem;justify-content:center;">
     {{ range .Pages }}
-      <div class="w-100 w-50-ns pa3">
-        <a class="comic-card" href="{{ .RelPermalink }}">
-          <div class="comic-card__inner">
-            {{ $img := or .Params.featured_image .Params.cover .Params.thumbnail }}
-            {{ if $img }}
-              <img src="{{ $img }}" alt="{{ .Title }} cover" class="db w-100">
+      <a class="comic-card" href="{{ .RelPermalink }}" style="height:100%;">
+        <div class="comic-card__inner">
+          {{ $img := or .Params.featured_image .Params.cover .Params.thumbnail }}
+          {{ if $img }}
+            <img src="{{ $img }}" alt="{{ .Title }} cover" class="db w-100" style="width:auto;max-width:320px;height:auto;object-fit:contain;background:rgba(0,0,0,0.04);margin:0 auto 1rem;">
+          {{ end }}
+          <h3 class="mt0 mb2">{{ .Title }}</h3>
+          {{ with .Params.description }}
+            <p class="mv0">{{ . }}</p>
+          {{ end }}
+          <div class="comic-card__meta">
+            {{ with .Params.page_count }}
+              {{ . }} pages
             {{ end }}
-            <h3 class="mt0 mb2">{{ .Title }}</h3>
-            {{ with .Params.description }}
-              <p class="mv0">{{ . }}</p>
-            {{ end }}
-            <div class="comic-card__meta">
-              {{ with .Params.page_count }}
-                {{ . }} pages
-              {{ end }}
-            </div>
-            <span class="comic-card__cta">Enter comic →</span>
           </div>
-        </a>
-      </div>
+          <span class="comic-card__cta">Enter comic →</span>
+        </div>
+      </a>
     {{ end }}
   </div>
 </div>

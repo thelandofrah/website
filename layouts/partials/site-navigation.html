@@ -1,25 +1,21 @@
-<nav class="pv3 ph3 ph4-ns" role="navigation">
-  <div class="flex-l center items-center justify-between">
-    <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white white-90 dib no-underline">
-      Home
-    </a>
-    <div class="flex-l items-center">
-      {{ partials.Include "i18nlist.html" . }}
-      {{ $allowed := slice "Music" "Art" "Comics" "Maps" "Merch" "Past Events / Photos" "Community Board" }}
-      {{ if .Site.Menus.main }}
-        <ul class="{{ compare.Conditional (compare.Eq $.Site.Language.LanguageDirection "rtl") "pr0 ml3" "pl0 mr3" }}">
-          {{ range .Site.Menus.main }}
-            {{ if in $allowed .Name }}
-              <li class="list f5 f4-ns fw4 dib {{ compare.Conditional (compare.Eq $.Site.Language.LanguageDirection "rtl") "pl3" "pr3" }}">
-                <a class="hover-white white-90 no-underline" href="{{ .URL }}" title="{{ lang.Translate "pageTitle" . }}">
-                  {{ .Name }}
-                </a>
-              </li>
-            {{ end }}
+<nav role="navigation" style="display:flex;align-items:center;gap:1.75rem;justify-content:space-between;">
+  <a href="{{ .Site.Home.RelPermalink }}" style="font-size:1.7rem;font-weight:800;text-decoration:none;color:#fff;">
+    Home
+  </a>
+  <div style="display:flex;align-items:center;gap:1.25rem;">
+    {{ $allowed := slice "Music" "Art" "Comics" "Maps" "Merch" "Past Events / Photos" "Community Board" }}
+    {{ if .Site.Menus.main }}
+      <ul style="display:flex;gap:1rem;margin:0;padding:0;list-style:none;">
+        {{ range .Site.Menus.main }}
+          {{ if in $allowed .Name }}
+            <li style="margin:0;">
+              <a href="{{ .URL }}" title="{{ .Name }}" style="color:#fff;text-decoration:none;font-weight:800;font-size:1.05rem;">
+                {{ .Name }}
+              </a>
+            </li>
           {{ end }}
-        </ul>
-      {{ end }}
-      {{ partials.IncludeCached "social/follow.html" . }}
-    </div>
+        {{ end }}
+      </ul>
+    {{ end }}
   </div>
 </nav>

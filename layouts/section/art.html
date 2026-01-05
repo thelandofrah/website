@@ -1,7 +1,5 @@
 {{ define "body-extra-class" }}music-spectrum{{ end }}
-{{ define "header" }}
-  {{ partials.Include "page-header.html" . }}
-{{ end }}
+{{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
 
 {{ define "main" }}
 <style>
@@ -30,7 +28,7 @@
     100% { background-position: 0% 50%; }
   }
   .art-page-shell {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2.5rem 1.5rem 4rem;
   }
@@ -70,31 +68,51 @@
     letter-spacing: 0.04em;
     margin: 2rem 0 1.5rem;
   }
+  .art-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
   .art-card {
     text-decoration: none;
     color: inherit;
     display: block;
+    height: 100%;
   }
   .art-card__inner {
     background: rgba(253,244,230,0.92);
-    border-radius: 18px;
-    padding: 1.5rem;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 0.9rem;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
     transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.45s ease, filter 0.35s ease;
-    will-change: transform;
+    height: 100%;
   }
   .art-card__inner img {
-    border-radius: 12px;
+    border-radius: 10px;
+    max-height: 240px;
+    object-fit: cover;
+    margin-bottom: 0.65rem;
+    width: 100%;
+  }
+  .art-card__inner h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.1rem;
+  }
+  .art-card__inner p {
+    margin: 0;
+    color: rgba(0,0,0,0.7);
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
   .art-card:hover .art-card__inner,
   .art-card:focus .art-card__inner {
     animation: artCardWiggle 0.9s ease-in-out infinite alternate;
-    box-shadow: 0 25px 40px rgba(0,0,0,0.18);
-    filter: brightness(1.03) saturate(1.05);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+    filter: brightness(1.02) saturate(1.03);
   }
   @keyframes artCardWiggle {
-    0% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
-    100% { transform: translateY(-10px) rotate(1deg) scale(1.04); }
+    0% { transform: translateY(-4px) rotate(-0.8deg) scale(1.01); }
+    100% { transform: translateY(-7px) rotate(0.8deg) scale(1.02); }
   }
 </style>
   <div class="art-page-shell">
@@ -114,32 +132,28 @@
 
     <h2 class="art-gallery-heading">Galleries</h2>
 
-    <div class="flex flex-wrap">
-
+    <div class="art-grid">
       {{ range .Sections}}
-        <div class="w-100 w-50-ns pa3">
-          <a href="{{ .RelPermalink }}" class="art-card">
-            <div class="art-card__inner">
+        <a href="{{ .RelPermalink }}" class="art-card">
+          <div class="art-card__inner">
 
-              {{ with .Params.featured_image }}
-                <img src="{{ . }}" class="db w-100 mb3" />
-              {{ end }}
+            {{ with .Params.featured_image }}
+              <img src="{{ . }}" class="db w-100" />
+            {{ end }}
 
-              <h2 class="f3 mt0 mb2">{{ .Title }}</h2>
+            <h2>{{ .Title }}</h2>
 
-              {{ with .Params.curator }}
-                <p class="f5 gray mt0 mb1">Curated by {{ . }}</p>
-              {{ end }}
+            {{ with .Params.curator }}
+              <p>Curated by {{ . }}</p>
+            {{ end }}
 
-              {{ with .Params.description }}
-                <p class="f5 gray mt0">{{ . }}</p>
-              {{ end }}
+            {{ with .Params.description }}
+              <p>{{ . }}</p>
+            {{ end }}
 
-            </div>
-          </a>
-        </div>
+          </div>
+        </a>
       {{ end }}
-
     </div>
 
   </div>

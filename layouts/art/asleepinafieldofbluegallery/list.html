@@ -1,5 +1,6 @@
 {{ define "body-extra-class" }}music-spectrum{{ end }}
 {{ define "header" }}
+  {{ partials.Include "site-header.html" . }}
   {{ $galleryDir := "images/art/fieldofblue" }}
   {{ $readPath := printf "static/%s" $galleryDir }}
   {{ $files := slice }}
@@ -108,7 +109,6 @@
         {{ end }}
       </div>
       <div class="fob-hero-strip__overlay">
-        {{ partials.Include "site-navigation.html" . }}
         <div class="fob-hero-strip__content">
           <div class="fob-hero-strip__text">
             <h1 class="fob-hero-strip__title">{{ .Title }}</h1>
@@ -150,6 +150,13 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 3rem 1.6rem;
+    padding: 0 1.5rem;
+    align-items: start;
+  }
   .gallery-card {
     text-decoration: none;
     color: inherit;
@@ -157,19 +164,23 @@
   }
   .gallery-card__inner {
     background: rgba(253,244,230,0.93);
-    border-radius: 20px;
-    padding: 1.4rem;
+    border-radius: 16px;
+    padding: 1rem;
     box-shadow: 0 18px 32px rgba(0,0,0,0.12);
     transition: transform 0.48s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.48s ease, filter 0.35s ease;
-    will-change: transform;
   }
   .gallery-card__inner img {
     border-radius: 12px;
+    object-fit: contain;
+    max-height: 320px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.55rem;
   }
   .gallery-card:hover .gallery-card__inner,
   .gallery-card:focus .gallery-card__inner {
     animation: galleryWiggle 0.9s ease-in-out infinite alternate;
-    box-shadow: 0 32px 45px rgba(0,0,0,0.22);
+    box-shadow: 0 24px 36px rgba(0,0,0,0.18);
     filter: brightness(1.05) saturate(1.08);
   }
   @keyframes galleryWiggle {
@@ -177,36 +188,25 @@
     100% { transform: translateY(-11px) rotate(1deg) scale(1.05); }
   }
 </style>
-  <main class="mw8 center ph4 pv5">
+  <main class="mw8 center ph4 pv5" style="padding-top:5cm;padding-left:3cm;padding-right:3cm;">
 
     <!-- Artwork Grid -->
-    <div class="flex flex-wrap justify-between">
+    <div class="gallery-grid">
       {{ range .Pages }}
-        <div class="w-100 w-30-ns pa3">
-          <a href="{{ .RelPermalink }}" class="gallery-card">
-            <div class="gallery-card__inner">
-
-              <!-- Thumbnail -->
-              {{ with .Params.featured_image }}
-                <img src="{{ . }}" alt="{{ $.Title }}" class="db w-100 mb2" />
-              {{ end }}
-
-              <!-- Title -->
-              <h2 class="f4 mt2 mb1">{{ .Title }}</h2>
-
-              <!-- Artist -->
-              {{ with .Params.artist }}
-                <p class="f6 mt0 mb1">{{ . }}</p>
-              {{ end }}
-
-              <!-- Price -->
-              {{ with .Params.price }}
-                <p class="f6 mt0 gray">{{ . }}</p>
-              {{ end }}
-
-            </div>
-          </a>
-        </div>
+        <a href="{{ .RelPermalink }}" class="gallery-card">
+          <div class="gallery-card__inner">
+            {{ with .Params.featured_image }}
+              <img src="{{ . }}" alt="{{ $.Title }}">
+            {{ end }}
+            <h2 class="f4 mt2 mb1">{{ .Title }}</h2>
+            {{ with .Params.artist }}
+              <p class="f6 mt0 mb1">{{ . }}</p>
+            {{ end }}
+            {{ with .Params.price }}
+              <p class="f6 mt0 gray">{{ . }}</p>
+            {{ end }}
+          </div>
+        </a>
       {{ end }}
     </div>
 

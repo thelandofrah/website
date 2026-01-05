@@ -3,6 +3,7 @@
 {{ end }}
 
 {{ define "header" }}
+  {{ partials.Include "site-header.html" . }}
   {{ $palette := dict
     "acidhoney" (slice "#1a98dc" "#c4d6db")
     "aehp" (slice "#facb9d" "#a5d5ff")
@@ -23,9 +24,7 @@
   }}
   {{ $musicSection := site.GetPage "section" "music" }}
   {{ $isMain := eq . $musicSection }}
-  {{ if $isMain }}
-    {{ partials.Include "page-header.html" . }}
-  {{ else }}
+  {{ if not $isMain }}
     {{ $heroImg := or .Params.feature_image .Params.featureImage .Params.cover }}
     {{ $slug := path.Base (path.Clean .File.Dir) }}
     {{ $colors := index $palette $slug }}
@@ -92,7 +91,6 @@
     </style>
     <header class="music-top-hero" {{ if $heroImg }}style="background-image:url('{{ $heroImg }}');"{{ else }}style="background:#111;"{{ end }}>
       <div class="music-top-hero__overlay"></div>
-      {{ partials.Include "site-navigation.html" . }}
       <div class="music-top-hero__content">
         <h1 class="music-top-hero__title">{{ .Title }}</h1>
         {{ with .Params.description }}

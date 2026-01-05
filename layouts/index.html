@@ -1,11 +1,5 @@
 {{ define "body-extra-class" }}map-surface{{ end }}
-{{ define "header" }}
-<header>
-  <div class="bg-black pv3 ph3 ph4-ns">
-    {{ partials.Include "site-navigation.html" . }}
-  </div>
-</header>
-{{ end }}
+{{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
 {{ define "footer" }}{{ end }}
 
 {{ define "main" }}
