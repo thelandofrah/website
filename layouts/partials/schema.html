@@ -1,0 +1,9 @@
+{{/* Minimal JSON-LD schema so builds succeed */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ if .IsHome }}WebSite{{ else }}WebPage{{ end }}",
+  "name": {{ .Site.Title | jsonify }},
+  "url": {{ .Permalink | jsonify }}
+}
+</script>
