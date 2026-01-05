@@ -2,7 +2,8 @@
 {{ define "header" }}
   {{ $galleryDir := "images/art/wftc" }}
   {{ $readPath := printf "static/%s" $galleryDir }}
-  {{ $files := readDir $readPath }}
+  {{ $files := slice }}
+{{ if fileExists $readPath }}{{ $files = readDir $readPath }}{{ end }}
   {{ $allowedExt := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" }}
   {{ $heroImages := slice }}
   {{ range $files }}
