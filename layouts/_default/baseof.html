@@ -23,8 +23,8 @@
       <meta name="author" content="{{ $author }}">
     {{ end }}
 
-    {{ partials.Include "site-style.html" . }}
-    {{ partials.Include "site-scripts.html" . }}
+    {{ partial "site-style.html" . }}
+    {{ partial "site-scripts.html" . }}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
