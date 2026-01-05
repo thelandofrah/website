@@ -1,0 +1,239 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+{{ define "footer" }}{{ end }}
+
+{{ define "main" }}
+{{ $galleryDir := .Params.gallery_dir | default (printf "images/events/%s" .File.TranslationBaseName) }}
+{{ $images := slice }}
+{{ if $galleryDir }}
+  {{ $readPath := printf "static/%s" $galleryDir }}
+  {{ if fileExists $readPath }}
+    {{ $allowedExt := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" }}
+    {{ range readDir $readPath }}
+      {{ if not .IsDir }}
+        {{ $ext := lower (path.Ext .Name) }}
+        {{ if in $allowedExt $ext }}
+          {{ $images = $images | append (printf "/%s/%s" $galleryDir .Name) }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ if gt (len $images) 0 }}
+  {{ $images = sort $images }}
+{{ end }}
+<style>
+  footer { display: none !important; }
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .event-page-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2.75rem) 4rem;
+  }
+  .event-hero-card {
+    background: rgba(253,244,230,0.93);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .event-hero-card h1 {
+    font-size: clamp(3rem, 8vw, 4.8rem);
+    margin: 0 0 0.75rem;
+  }
+  .event-hero-card p {
+    margin: 0.5rem auto 0;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    max-width: 760px;
+    color: rgba(0,0,0,0.75);
+  }
+  .event-gallery {
+    background: rgba(253,244,230,0.9);
+    border-radius: 24px;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+  }
+  .event-gallery__viewport {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #05060b;
+    min-height: 320px;
+    max-height: 78vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .event-frame {
+    display: none;
+    margin: 0;
+    position: relative;
+  }
+  .event-frame.is-active {
+    display: block;
+  }
+  .event-frame img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 72vh;
+    display: block;
+    object-fit: contain;
+    background: #05060b;
+  }
+  .event-gallery__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .event-gallery__progress {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.5rem 0.9rem;
+    background: rgba(0,0,0,0.08);
+    border-radius: 999px;
+  }
+  .event-gallery__button {
+    border: none;
+    background: linear-gradient(120deg, #111, #333);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .event-gallery__button:hover,
+  .event-gallery__button:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 32px rgba(0,0,0,0.26);
+    filter: brightness(1.05);
+    outline: none;
+  }
+  .event-gallery__hint {
+    width: 100%;
+    margin: 0.35rem 0 0;
+    color: rgba(0,0,0,0.6);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 640px) {
+    .event-gallery__controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .event-gallery__button {
+      justify-content: center;
+      width: 100%;
+    }
+    .event-gallery__progress {
+      text-align: center;
+      width: 100%;
+    }
+    .event-gallery__viewport {
+      max-height: 70vh;
+      padding: 0.75rem;
+    }
+    .event-frame img {
+      max-height: 64vh;
+    }
+  }
+</style>
+
+<div class="event-page-shell">
+  <div class="event-hero-card">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}
+      <p>{{ . }}</p>
+    {{ end }}
+  </div>
+
+  {{ if gt (len $images) 0 }}
+    <div class="event-gallery" data-gallery>
+      <div class="event-gallery__viewport">
+        {{ range $index, $img := $images }}
+          <figure class="event-frame{{ if eq $index 0 }} is-active{{ end }}" data-frame data-index="{{ $index }}">
+            <img src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
+          </figure>
+        {{ end }}
+      </div>
+      <div class="event-gallery__controls">
+        <button class="event-gallery__button" type="button" data-prev>&larr; Prev</button>
+        <div class="event-gallery__progress"><span data-current>1</span> / {{ len $images }}</div>
+        <button class="event-gallery__button" type="button" data-next>Next &rarr;</button>
+        <p class="event-gallery__hint">Click image or use arrow keys to move through the set.</p>
+      </div>
+    </div>
+  {{ else }}
+    <p class="measure-wide center tc f4">Gallery assets not found for this event.</p>
+  {{ end }}
+</div>
+
+<script>
+(() => {
+  const gallery = document.querySelector("[data-gallery]");
+  if (!gallery) return;
+  const frames = Array.from(gallery.querySelectorAll("[data-frame]"));
+  const currentEl = gallery.querySelector("[data-current]");
+  const total = frames.length;
+  if (!total) return;
+  let current = 0;
+
+  const activate = (next) => {
+    frames[current].classList.remove("is-active");
+    current = (next % total + total) % total;
+    frames[current].classList.add("is-active");
+    if (currentEl) currentEl.textContent = current + 1;
+  };
+
+  gallery.querySelector("[data-prev]")?.addEventListener("click", () => activate(current - 1));
+  gallery.querySelector("[data-next]")?.addEventListener("click", () => activate(current + 1));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") activate(current - 1);
+    if (event.key === "ArrowRight") activate(current + 1);
+  });
+  frames.forEach((frame) => {
+    frame.addEventListener("click", () => activate(current + 1));
+  });
+})();
+</script>
+{{ end }}

@@ -1,0 +1,47 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = 'ananke'
+[params]
+  cover_dimming_class = "bg-transparent"
+  body_classes = "avenir"
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+[menu]
+
+  [[menu.main]]
+    name = "Music"
+    url = "/music/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Art"
+    url = "/art/"
+    weight = 2
+
+  [[menu.main]]
+    name = "Comics"
+    url = "/comics/"
+    weight = 3
+
+  [[menu.main]]
+    name = "Maps"
+    url = "/maps/"
+    weight = 4
+
+  [[menu.main]]
+    name = "Merch"
+    url = "/merch/"
+    weight = 5
+
+  [[menu.main]]
+    name = "Past Events / Photos"
+    url = "/events/"
+    weight = 6
+
+  [[menu.main]]
+    name = "Community Board"
+    url = "/community/"
+    weight = 7

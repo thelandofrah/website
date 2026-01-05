@@ -1,0 +1,259 @@
+{{ define "body-extra-class" }}{{ end }}
+{{ define "header" }}
+<style>
+  .art-hero-strip {
+    position: relative;
+    min-height: 360px;
+    background: linear-gradient(135deg, #04122d, #0b2f53, #134669, #0b2744);
+    background-size: 400% 400%;
+    animation: artHeroGradient 30s ease-in-out infinite;
+    color: #fff;
+  }
+  @keyframes artHeroGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .art-hero-strip__content {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(2rem, 4vw, 4rem);
+  }
+  .art-hero-strip__blur {
+    position: absolute;
+    top: clamp(1rem, 3vw, 2.5rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    left: clamp(1rem, 3vw, 2rem);
+    right: clamp(1.5rem, 4vw, 3rem);
+    background: rgba(5,7,16,0.45);
+    filter: blur(28px);
+    border-radius: 24px;
+    z-index: 1;
+  }
+  .art-hero-strip__text {
+    position: relative;
+    z-index: 2;
+  }
+  .art-hero-strip__title {
+    margin: 2rem 0 0;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-weight: 800;
+    background-image: linear-gradient(120deg,
+      rgba(196,221,255,1),
+      rgba(128,194,255,1),
+      rgba(162,214,255,1));
+    background-size: 240% 240%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: artHeroTitleShift 12s ease-in-out infinite;
+  }
+  @keyframes artHeroTitleShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+<header class="art-hero-strip">
+  {{ partials.Include "site-navigation.html" . }}
+  <div class="art-hero-strip__content">
+    <div class="art-hero-strip__blur"></div>
+    <div class="art-hero-strip__text">
+      <h1 class="art-hero-strip__title">{{ .Title }}</h1>
+    </div>
+  </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+<style>
+  .art-detail-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+  }
+  .art-detail-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    background: rgba(253,244,230,0.95);
+    border-radius: 28px;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 40px 70px rgba(0,0,0,0.18);
+    overflow: hidden;
+  }
+  .art-detail-media {
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+  }
+  .art-detail-media img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 22px;
+  }
+  .art-detail-meta h1 {
+    font-size: clamp(2.6rem, 5vw, 3.8rem);
+    margin: 0 0 1rem;
+    font-weight: 800;
+    background-image: linear-gradient(120deg,
+      #7dc9ff,
+      #9ed8ff,
+      #b5e2ff,
+      #8fd5ff);
+    background-size: 240% 240%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: artTitleShift 14s ease-in-out infinite;
+  }
+  .art-detail-meta .art-detail-subtitle {
+    color: rgba(0,0,0,0.55);
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+  }
+  .art-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .art-detail-field {
+    background: rgba(255,255,255,0.85);
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .art-detail-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(0,0,0,0.45);
+    margin-bottom: 0.35rem;
+  }
+  .art-detail-value {
+    font-size: 1.05rem;
+    color: rgba(0,0,0,0.85);
+  }
+  .art-detail-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .art-detail-link {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.85);
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  }
+  .art-detail-link:hover,
+  .art-detail-link:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.18);
+    filter: brightness(1.05) saturate(1.05);
+  }
+  .art-detail-link .art-detail-label {
+    margin-bottom: 0.35rem;
+  }
+  .art-detail-link .art-detail-handle {
+    font-size: 1.05rem;
+    color: rgba(0,0,0,0.85);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .art-detail-notes {
+    background: rgba(255,255,255,0.9);
+    border-radius: 18px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    color: rgba(0,0,0,0.8);
+    line-height: 1.6;
+  }
+  .art-detail-body {
+    margin-top: 2rem;
+    background: rgba(255,255,255,0.9);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.12);
+  }
+  @keyframes artTitleShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+
+<main class="art-detail-wrapper">
+  <article class="art-detail-card">
+    <div class="art-detail-media">
+      {{ with .Params.featured_image }}
+        <img src="{{ . }}" alt="{{ $.Title }}">
+      {{ end }}
+    </div>
+
+    <div class="art-detail-meta">
+      {{ with .Params.artist }}
+        <p class="art-detail-subtitle">by {{ . }}</p>
+      {{ end }}
+
+      <div class="art-detail-grid">
+        {{ with .Params.medium }}
+          <div class="art-detail-field">
+            <span class="art-detail-label">Medium</span>
+            <span class="art-detail-value">{{ . }}</span>
+          </div>
+        {{ end }}
+        {{ with .Params.size }}
+          <div class="art-detail-field">
+            <span class="art-detail-label">Size</span>
+            <span class="art-detail-value">{{ . }}</span>
+          </div>
+        {{ end }}
+        {{ with .Params.price }}
+          <div class="art-detail-field">
+            <span class="art-detail-label">Price</span>
+            <span class="art-detail-value">{{ . }}</span>
+          </div>
+        {{ end }}
+      </div>
+
+      <div class="art-detail-actions">
+        {{ with .Params.instagram }}
+          <a href="https://instagram.com/{{ . | strings.TrimPrefix "@" }}" target="_blank" rel="noopener" class="art-detail-link">
+            <span class="art-detail-label">Instagram</span>
+            <span class="art-detail-handle">@{{ . | strings.TrimPrefix "@" }}</span>
+          </a>
+        {{ end }}
+        {{ with .Params.contact }}
+          <div class="art-detail-link">
+            <span class="art-detail-label">Contact</span>
+            <span class="art-detail-handle">{{ . }}</span>
+          </div>
+        {{ end }}
+      </div>
+
+      {{ with .Params.notes }}
+        {{ if ne . "" }}
+          <div class="art-detail-notes">
+            {{ . }}
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  </article>
+
+  {{ with .Content }}
+    <section class="art-detail-body">
+      {{ . }}
+    </section>
+  {{ end }}
+</main>
+{{ end }}

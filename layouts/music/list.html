@@ -1,0 +1,411 @@
+{{ define "body-extra-class" }}
+  music-spectrum
+{{ end }}
+
+{{ define "header" }}
+  {{ $palette := dict
+    "acidhoney" (slice "#1a98dc" "#c4d6db")
+    "aehp" (slice "#facb9d" "#a5d5ff")
+    "bounce" (slice "#d9c3a2" "#ffffff")
+    "enthalpy" (slice "#a8c8f1" "#dce8fb")
+    "escape" (slice "#a9d0ff" "#c59ae2")
+    "fauxpas" (slice "#a89480" "#8d6f57")
+    "fob" (slice "#cfe3ff" "#ffffff")
+    "iam" (slice "#e0e0e3" "#ffffff")
+    "siofora" (slice "#e60511" "#ffffff")
+    "waiting" (slice "#8cc7ff" "#9ed4ff")
+    "yerdan" (slice "#ffd951" "#f12f1d")
+    "goodspace" (slice "#cdb6ff" "#f0e8ff")
+    "lavender" (slice "#cdb5e0" "#f1e9ff")
+    "lizzyriver" (slice "#2c5c3d" "#c6e6f7")
+    "nowords" (slice "#ffffff" "#bca6e7")
+    "spookydance" (slice "#9fb17c" "#4a6b3f")
+  }}
+  {{ $musicSection := site.GetPage "section" "music" }}
+  {{ $isMain := eq . $musicSection }}
+  {{ if $isMain }}
+    {{ partials.Include "page-header.html" . }}
+  {{ else }}
+    {{ $heroImg := or .Params.feature_image .Params.featureImage .Params.cover }}
+    {{ $slug := path.Base (path.Clean .File.Dir) }}
+    {{ $colors := index $palette $slug }}
+    {{ $primary := "" }}
+    {{ $secondary := "" }}
+    {{ with $colors }}
+      {{ $primary = index . 0 }}
+      {{ if ge (len .) 2 }}
+        {{ $secondary = index . 1 }}
+      {{ end }}
+    {{ end }}
+    {{ $primary := $primary | compare.Default "#ffffff" }}
+    {{ $secondary := $secondary | compare.Default "#dddddd" }}
+    <style>
+      .music-top-hero {
+        position: relative;
+        min-height: 360px;
+        background-size: cover;
+        background-position: center;
+        --hero-c1: {{ $primary }};
+        --hero-c2: {{ $secondary }};
+      }
+      .music-top-hero__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, rgba(0,0,0,0.85), rgba(0,0,0,0.35));
+        pointer-events: none;
+      }
+      .music-top-hero__content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 100%;
+        padding: 3rem 1.5rem 4rem;
+      }
+      .music-top-hero__title {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        margin: 0;
+        background-image: linear-gradient(120deg, var(--hero-c1), var(--hero-c2));
+        background-size: 200% 200%;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: heroTitleShift 10s ease-in-out infinite;
+      }
+      .music-top-hero__description {
+        color: rgba(255,255,255,0.85);
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        max-width: 640px;
+      }
+      .music-top-hero nav {
+        position: relative;
+        z-index: 2;
+      }
+      @keyframes heroTitleShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    </style>
+    <header class="music-top-hero" {{ if $heroImg }}style="background-image:url('{{ $heroImg }}');"{{ else }}style="background:#111;"{{ end }}>
+      <div class="music-top-hero__overlay"></div>
+      {{ partials.Include "site-navigation.html" . }}
+      <div class="music-top-hero__content">
+        <h1 class="music-top-hero__title">{{ .Title }}</h1>
+        {{ with .Params.description }}
+          <p class="music-top-hero__description">{{ . }}</p>
+        {{ end }}
+      </div>
+    </header>
+  {{ end }}
+{{ end }}
+
+{{ define "main" }}
+{{ $palette := dict
+  "acidhoney" (slice "#1a98dc" "#c4d6db")
+  "aehp" (slice "#facb9d" "#a5d5ff")
+  "bounce" (slice "#d9c3a2" "#ffffff")
+  "enthalpy" (slice "#a8c8f1" "#dce8fb")
+  "escape" (slice "#a9d0ff" "#c59ae2")
+  "fauxpas" (slice "#a89480" "#8d6f57")
+  "fob" (slice "#cfe3ff" "#ffffff")
+  "iam" (slice "#e0e0e3" "#ffffff")
+  "siofora" (slice "#e60511" "#ffffff")
+  "waiting" (slice "#8cc7ff" "#9ed4ff")
+  "yerdan" (slice "#ffd951" "#f12f1d")
+  "goodspace" (slice "#cdb6ff" "#f0e8ff")
+  "lavender" (slice "#cdb5e0" "#f1e9ff")
+  "lizzyriver" (slice "#2c5c3d" "#c6e6f7")
+  "nowords" (slice "#ffffff" "#bca6e7")
+  "spookydance" (slice "#9fb17c" "#4a6b3f")
+}}
+{{ $musicSection := site.GetPage "section" "music" }}
+{{ $isMain := eq . $musicSection }}
+{{ $slug := path.Base (path.Clean .File.Dir) }}
+{{ $colors := index $palette $slug }}
+{{ $primary := "" }}
+{{ $secondary := "" }}
+{{ with $colors }}
+  {{ $primary = index . 0 }}
+  {{ if ge (len .) 2 }}
+    {{ $secondary = index . 1 }}
+  {{ end }}
+{{ end }}
+{{ $primary := $primary | compare.Default "#f9f9f9" }}
+{{ $secondary := $secondary | compare.Default "#ececec" }}
+
+<style>
+  {{ if not $isMain }}
+  main.pb7 {
+    padding-bottom: 0;
+  }
+  {{ end }}
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .music-release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 2rem;
+  }
+  .release-card {
+    text-decoration: none;
+    color: inherit;
+  }
+  .release-card__inner {
+    text-align: center;
+    border-radius: 12px;
+    padding: 0.5rem;
+    background: rgba(253,244,230,0.92);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease, filter 0.4s ease;
+    will-change: transform;
+  }
+  .release-card__inner img {
+    border-radius: 10px;
+  }
+  .release-card:hover .release-card__inner,
+  .release-card:focus .release-card__inner {
+    animation: releaseWiggle 0.85s ease-in-out infinite alternate;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+    filter: brightness(1.03) saturate(1.1);
+  }
+  @keyframes releaseWiggle {
+    0% { transform: translateY(-4px) rotate(-1.2deg) scale(1.02); }
+    100% { transform: translateY(-8px) rotate(1.2deg) scale(1.04); }
+  }
+  {{ if $isMain }}
+  .music-main-hero {
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    animation: musicHeroDrop 0.9s ease-out forwards;
+    transform-origin: center top;
+  }
+  .music-main-title {
+    font-size: clamp(3rem, 8vw, 4.8rem);
+    margin-bottom: 1rem;
+  }
+  .music-main-body {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+  .music-main-body p {
+    margin: 0.75rem 0;
+  }
+  @keyframes musicHeroDrop {
+    0% { transform: translateY(-90px); opacity: 0; }
+    60% { transform: translateY(8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  {{ end }}
+</style>
+
+<style>
+  .music-release-body {
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+.music-release-body iframe {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 460px;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  }
+.music-release-shell {
+    position: relative;
+    overflow: hidden;
+    --c1: {{ $primary }};
+    --c2: {{ $secondary }};
+    background: transparent;
+  }
+  .music-release-shell::before,
+  .music-release-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: block;
+    opacity: 0.7;
+    background-size: 250% 250%;
+    animation: musicGradientShift 16s ease-in-out infinite;
+  }
+  .music-release-shell::before {
+    filter: blur(30px);
+    background-image: radial-gradient(circle at 15% 20%, var(--c1), rgba(0,0,0,0) 40%),
+                      radial-gradient(circle at 85% 15%, var(--c2), rgba(0,0,0,0) 50%),
+                      radial-gradient(circle at 40% 85%, var(--c1), rgba(0,0,0,0) 45%);
+  }
+  .music-release-shell::after {
+    background-image: linear-gradient(120deg, var(--c1), var(--c2));
+    opacity: 0.75;
+  }
+  .music-release-shell > .music-release-inner {
+    position: relative;
+    z-index: 1;
+  }
+  .music-release-body a[href*="tidal.com"],
+  .album-body a[href*="tidal.com"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0,0,0,0.82);
+    color: #fff;
+    padding: 0.65rem 1rem;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .music-release-body a[href*="tidal.com"]:hover,
+  .music-release-body a[href*="tidal.com"]:focus,
+  .album-body a[href*="tidal.com"]:hover,
+  .album-body a[href*="tidal.com"]:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(0,0,0,0.22);
+    filter: brightness(1.08);
+  }
+  .music-release-body a[href*="tidal.com"]::before,
+  .album-body a[href*="tidal.com"]::before {
+    content: "↗";
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+  @keyframes musicGradientShift {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+</style>
+
+<div class="{{ if $isMain }}{{ else }}music-release-shell{{ end }}" style="{{ if not $isMain }}padding:3rem 0 0;{{ end }}">
+  <div class="{{ if not $isMain }}music-release-inner{{ end }}" style="max-width:{{ if $isMain }}1100px{{ else }}900px{{ end }};margin:0 auto;">
+
+    {{ if $isMain }}
+      <div class="music-main-hero">
+        <h1 class="music-main-title">{{ .Title }}</h1>
+        {{ with .Content }}
+          <div class="music-main-body">
+            {{ . }}
+          </div>
+        {{ end }}
+      </div>
+    {{ else }}
+      {{ with .Content }}
+        <div style="margin-bottom:2rem;{{ if not $isMain }}padding:0 1.5rem;{{ end }}" class="{{ if not $isMain }}music-release-body{{ end }}">
+          {{ . }}
+        </div>
+      {{ end }}
+    {{ end }}
+
+  {{ if $isMain }}
+  <!-- ALBUMS + LIVE SETS -->
+  <h2 style="margin-top:2rem;">Albums & Live Sets</h2>
+
+  <div class="album-grid music-release-grid" style="margin-bottom:3rem;">
+
+    {{ range (where .Pages "Params.category" "album").ByWeight.Reverse }}
+
+    <a href="{{ .RelPermalink }}" class="release-card">
+      <div class="release-card__inner">
+
+        {{ $img := or .Params.featureImage .Params.cover }}
+        {{ if $img }}
+          <img src="{{ $img }}"
+               alt="{{ .Title }}"
+               style="width:100%;height:auto;border-radius:10px;">
+        {{ end }}
+
+        <h3 style="margin-top:0.75rem;font-size:1.1rem;">{{ .Title }}</h3>
+
+        {{ with .Date }}
+          <p style="margin:0;font-size:0.9rem;color:#aaa;">
+            {{ .Format "2006" }}
+          </p>
+        {{ end }}
+
+        {{ if .Params.snippet }}
+          <p style="font-size:0.9rem;color:#777;line-height:1.4;margin-top:0.4rem;">
+            {{ .Params.snippet }}
+          </p>
+        {{ end }}
+
+      </div>
+    </a>
+
+    {{ end }}
+  </div>
+
+
+  <!-- SINGLES -->
+  <h2 style="margin-top:2rem;">Singles / EPs</h2>
+
+  <div class="album-grid music-release-grid">
+
+    {{ range (where .Pages "Params.category" "single").ByWeight.Reverse }}
+
+    <a href="{{ .RelPermalink }}" class="release-card">
+      <div class="release-card__inner">
+
+        {{ $img := or .Params.featureImage .Params.cover }}
+        {{ if $img }}
+          <img src="{{ $img }}"
+               alt="{{ .Title }}"
+               style="width:100%;height:auto;border-radius:10px;">
+        {{ end }}
+
+        <h3 style="margin-top:0.75rem;font-size:1.1rem;">{{ .Title }}</h3>
+
+        {{ with .Date }}
+          <p style="margin:0;font-size:0.9rem;color:#aaa;">
+            {{ .Format "2006" }}
+          </p>
+        {{ end }}
+
+        {{ if .Params.snippet }}
+          <p style="font-size:0.9rem;color:#777;line-height:1.4;margin-top:0.4rem;">
+            {{ .Params.snippet }}
+          </p>
+        {{ end }}
+
+      </div>
+    </a>
+
+    {{ end }}
+
+  </div>
+    {{ end }}
+
+  </div>
+</div>
+{{ end }}

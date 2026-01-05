@@ -1,0 +1,550 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+{{ define "footer" }}{{ end }}
+
+{{ define "main" }}
+{{ $title := .Title }}
+{{ $pageCount := .Params.page_count | default 0 }}
+{{ $digits := .Params.page_digits | default 3 }}
+{{ $prefix := .Params.page_prefix | default "" }}
+{{ $extension := .Params.page_extension | default ".jpg" }}
+{{ $pages := slice }}
+{{ $chapterAudio := dict }}
+{{ $audioSnippets := .Params.audio_embeds | default dict }}
+{{ range .Params.chapters }}
+  {{ $pageKey := printf "%d" .page }}
+  {{ $trackList := .tracks }}
+  {{ if not $trackList }}
+    {{ if .track_numbers }}
+      {{ $trackList = .track_numbers }}
+    {{ else }}
+      {{ $trackList = findRE "\\d+" .title }}
+    {{ end }}
+  {{ end }}
+  {{ if gt (len $trackList) 0 }}
+    {{ $chapterAudio = merge $chapterAudio (dict $pageKey $trackList) }}
+  {{ end }}
+{{ end }}
+{{ if and $prefix (gt $pageCount 0) }}
+  {{ range seq 1 $pageCount }}
+    {{ $num := printf "%0*d" $digits . }}
+    {{ $pages = $pages | append (printf "%s%s%s" $prefix $num $extension) }}
+  {{ end }}
+{{ end }}
+<style>
+  footer {
+    display: none !important;
+  }
+  body.music-spectrum {
+    --map-tile: calc(100vw * 1.415);
+    background-color: #f2deaa;
+    background-image: linear-gradient(rgba(242,222,170,0.5), rgba(242,222,170,0.5)), url('/images/art/map/finalmap.png');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 100% auto;
+  }
+  body.music-spectrum::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(242,222,170,0.45) 0%,
+      rgba(242,222,170,0.25) 2%,
+      rgba(242,222,170,0.08) 6%,
+      rgba(242,222,170,0) 12%,
+      rgba(242,222,170,0) 88%,
+      rgba(242,222,170,0.08) 94%,
+      rgba(242,222,170,0.25) 98%,
+      rgba(242,222,170,0.45) 100%);
+    background-size: 100% var(--map-tile);
+    background-repeat: repeat-y;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    filter: blur(35px);
+  }
+  .comic-return {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 5;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .comic-return:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+  }
+.comic-page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+    gap: 0.5rem;
+    max-width: 480px;
+    margin: 2rem auto 0;
+    padding: 1.25rem;
+    background: rgba(255,255,255,0.7);
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  .comic-page-grid button {
+    border: none;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 0.35rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .comic-page-grid button:hover,
+  .comic-page-grid button:focus {
+    transform: translateY(-2px);
+    background: rgba(0,0,0,0.9);
+    outline: none;
+  }
+  .comic-reader-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto clamp(6rem, 12vw, 14rem);
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.2rem, 4vw, 3rem) 0;
+  }
+  .comic-reader-hero {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .comic-hero-card {
+    background: rgba(253, 244, 230, 0.92);
+    border-radius: 24px;
+    padding: 1.75rem clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    text-align: center;
+    width: min(900px, 92vw);
+  }
+  .comic-hero-card h1 {
+    font-size: clamp(3rem, 8vw, 4.8rem);
+    margin: 0;
+  }
+  .comic-hero-card p {
+    margin: 0.75rem 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  .comic-mode-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .comic-mode-buttons {
+    display: inline-flex;
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  }
+  .comic-mode-buttons button {
+    border: none;
+    background: rgba(255,255,255,0.7);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .comic-mode-buttons button.active {
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+  }
+  .comic-chapter-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    font-weight: 600;
+  }
+  .comic-chapter-links a {
+    text-decoration: none;
+    color: #1d3b6b;
+    background: rgba(255,255,255,0.6);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    transition: transform 0.2s ease;
+  }
+  .comic-chapter-links a:hover {
+    transform: translateY(-2px);
+  }
+  .comic-reader {
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+  .comic-reader[data-mode="pager"] #comic-continuous {
+    display: none;
+  }
+  .comic-reader[data-mode="continuous"] #comic-carousel {
+    display: none;
+  }
+  .comic-continuous {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+  .comic-page-wrap {
+    width: min(900px, 92vw);
+    margin: 0 auto 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .comic-page {
+    margin: 0 auto;
+    width: min(900px, 92vw);
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 18px;
+  }
+  .comic-page img {
+    display: block;
+    height: auto;
+    max-height: calc(100vh - 6rem);
+    width: auto;
+    max-width: 100%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    clip-path: inset(1.4% round 14px);
+  }
+  .comic-carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .comic-carousel-image {
+    width: min(900px, 92vw);
+    max-width: 900px;
+  }
+  .comic-carousel-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .comic-page-audio {
+    width: min(640px, 90vw);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+  .comic-player-card {
+    background: rgba(253,244,230,0.95);
+    border-radius: 22px;
+    padding: 1.2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  }
+  .comic-player-card iframe {
+    width: 100% !important;
+    border: 0;
+    border-radius: 16px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+  .audio-placeholder {
+    min-height: 120px;
+    border-radius: 16px;
+    border: 2px dashed rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: rgba(0,0,0,0.6);
+  }
+  .comic-carousel-image img {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 6rem);
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+  }
+  .comic-nav {
+    border: none;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+  .comic-page-indicator {
+    font-weight: 600;
+  }
+  .comic-carousel-audio {
+    margin-top: 1rem;
+    width: min(420px, 90vw);
+    position: static;
+    transform: none;
+  }
+  .comic-carousel-audio[hidden] {
+    display: none;
+  }
+  .comic-missing {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 2rem;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.7);
+  }
+  @media (max-width: 50em) {
+    .comic-page-wrap {
+      width: min(900px, 100%);
+    }
+    .comic-page-audio {
+      width: 100%;
+    }
+  }
+  @media (min-width: 50em) {
+    .comic-continuous {
+      max-height: 80vh;
+    }
+  }
+</style>
+
+<div id="comic-top"></div>
+<div class="comic-reader-shell">
+  <div class="comic-reader-hero">
+    <div class="comic-hero-card comic-hero-title">
+      <h1>{{ $title }}</h1>
+    </div>
+    {{ with .Content }}
+      <div class="comic-hero-card comic-hero-description">
+        {{ . }}
+      </div>
+    {{ else }}
+      {{ with .Params.description }}
+        <div class="comic-hero-card comic-hero-description">
+          <p>{{ . }}</p>
+        </div>
+      {{ end }}
+    {{ end }}
+  </div>
+
+  <div class="comic-mode-panel">
+    <div class="comic-mode-buttons">
+      <button type="button" data-comic-mode="continuous" class="active">Continuous scroll</button>
+      <button type="button" data-comic-mode="pager">Page by page</button>
+    </div>
+
+    {{ $chapters := .Params.chapters }}
+    {{ if or $chapters (gt $pageCount 0) }}
+      <div class="comic-chapter-links">
+        <span>Jump to:</span>
+        {{ range $chapters }}
+          {{ $target := printf "%0*d" $digits .page }}
+          <a href="#page-{{ $target }}">{{ .title }}</a>
+        {{ end }}
+        {{ if gt $pageCount 0 }}
+          <a href="#page-{{ printf "%0*d" $digits $pageCount }}">{{ .Params.end_label | compare.Default "End" }}</a>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+
+  {{ if gt (len $pages) 0 }}
+    <div class="comic-reader" data-mode="continuous">
+      <section id="comic-continuous" class="comic-continuous">
+        {{ range $idx, $src := $pages }}
+          {{ $pageNumber := add $idx 1 }}
+          {{ $anchor := printf "%0*d" $digits $pageNumber }}
+          {{ $pageKey := printf "%d" $pageNumber }}
+          {{ $audioEmbeds := index $chapterAudio $pageKey }}
+          <div class="comic-page-wrap">
+            <figure class="comic-page" id="page-{{ $anchor }}" data-page-index="{{ $pageNumber }}">
+              <img src="{{ $src }}" loading="lazy" alt="Page {{ $pageNumber }} of {{ $title }}">
+            </figure>
+            {{ if $audioEmbeds }}
+              <div class="comic-page-audio" aria-label="Audio for {{ htmlEscape $title }}">
+                {{ range $audioEmbeds }}
+                  {{ $trackID := printf "%v" . }}
+                  {{ $slot := index $audioSnippets $trackID }}
+                  <div class="comic-player-card">
+                    {{ if $slot }}
+                      {{ $slot | safeHTML }}
+                    {{ else }}
+                      <div class="audio-placeholder" data-track="{{ $trackID }}">
+                        <!-- Insert Bandcamp embed for track {{ $trackID }} in audio_embeds["{{ $trackID }}"] -->
+                        Track {{ $trackID }} audio embed
+                      </div>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            {{ end }}
+          </div>
+        {{ end }}
+      </section>
+
+      <section id="comic-carousel" class="comic-carousel" aria-label="Page reader" hidden>
+        <div class="comic-carousel-image">
+          <img src="{{ index $pages 0 }}" alt="Page 1 of {{ $title }}">
+        </div>
+        <div class="comic-carousel-controls">
+          <button class="comic-nav prev" type="button" aria-label="Previous page">‹</button>
+          <div class="comic-page-indicator">
+            Page <span data-current>1</span> / {{ $pageCount }}
+          </div>
+          <button class="comic-nav next" type="button" aria-label="Next page">›</button>
+        </div>
+        <div id="comic-carousel-audio" class="comic-page-audio comic-carousel-audio" hidden></div>
+        {{ if gt $pageCount 0 }}
+          <div class="comic-page-grid" aria-label="Go to page" data-grid hidden>
+            {{ range seq 1 $pageCount }}
+              <button type="button" data-page-go="{{ . }}">{{ . }}</button>
+            {{ end }}
+          </div>
+        {{ end }}
+      </section>
+    </div>
+{{ else }}
+  <p class="comic-missing">Page images are not configured yet. Update the front matter with the prefix, extension, and total pages to enable the reader.</p>
+{{ end }}
+</div>
+
+<a href="#comic-top" class="comic-return">Return to top</a>
+
+{{ if gt (len $pages) 0 }}
+<script>
+(function() {
+  const reader = document.querySelector('.comic-reader');
+  if (!reader) return;
+  const buttons = document.querySelectorAll('[data-comic-mode]');
+  const carousel = document.getElementById('comic-carousel');
+  const continuous = document.getElementById('comic-continuous');
+  const pageGrid = document.querySelector('[data-grid]');
+  const indicator = carousel.querySelector('[data-current]');
+  const imageEl = carousel.querySelector('img');
+  const prev = carousel.querySelector('.comic-nav.prev');
+  const next = carousel.querySelector('.comic-nav.next');
+  const pageGridButtons = document.querySelectorAll('[data-page-go]');
+  const audioMap = {{ $chapterAudio | jsonify | safeJS }};
+  const audioSnippets = {{ $audioSnippets | jsonify | safeJS }};
+  const audioPanel = document.getElementById('comic-carousel-audio');
+  const pages = {{ $pages | jsonify | safeJS }};
+  const title = {{ printf "%q" $title }};
+  let currentIndex = 0;
+
+  function setMode(mode) {
+    reader.dataset.mode = mode;
+    reader.setAttribute('data-mode', mode);
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.comicMode === mode);
+    });
+    const isPager = mode === 'pager';
+    if (carousel) {
+      carousel.hidden = !isPager;
+      carousel.style.display = isPager ? '' : 'none';
+    }
+    if (continuous) {
+      continuous.hidden = isPager;
+      continuous.style.display = isPager ? 'none' : '';
+    }
+    if (pageGrid) {
+      pageGrid.hidden = !isPager;
+      pageGrid.style.display = isPager ? '' : 'none';
+    }
+  }
+
+  function updateCarousel() {
+    imageEl.src = pages[currentIndex];
+    imageEl.alt = `Page ${currentIndex + 1} of ${title}`;
+    indicator.textContent = currentIndex + 1;
+    if (audioPanel) {
+      const tracks = audioMap[String(currentIndex + 1)] || [];
+      if (tracks.length) {
+        audioPanel.innerHTML = tracks.map(track => {
+          const snippet = audioSnippets[track];
+          if (snippet) {
+            return `<div class="comic-player-card">${snippet}</div>`;
+          }
+          return `
+            <div class="comic-player-card">
+              <div class="audio-placeholder" data-track="${track}">
+                <!-- Insert Bandcamp embed for track ${track} in audio_embeds["${track}"] -->
+                Track ${track} audio embed
+              </div>
+            </div>`;
+        }).join('');
+        audioPanel.hidden = false;
+      } else {
+        audioPanel.innerHTML = '';
+        audioPanel.hidden = true;
+      }
+    }
+  }
+
+  prev.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + pages.length) % pages.length;
+    updateCarousel();
+  });
+
+  next.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % pages.length;
+    updateCarousel();
+  });
+
+  document.querySelectorAll('.comic-page').forEach(page => {
+    page.addEventListener('click', () => {
+      currentIndex = Number(page.dataset.pageIndex) - 1;
+      updateCarousel();
+      setMode('pager');
+      carousel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => setMode(btn.dataset.comicMode));
+  });
+
+  pageGridButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = Number(btn.dataset.pageGo);
+      if (Number.isNaN(target)) return;
+      currentIndex = Math.max(0, Math.min(pages.length - 1, target - 1));
+      updateCarousel();
+      setMode('pager');
+      carousel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  setMode('continuous');
+  updateCarousel();
+})();
+</script>
+{{ end }}
+{{ end }}

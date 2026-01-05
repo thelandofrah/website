@@ -1,0 +1,99 @@
+{{ define "body-extra-class" }}map-surface{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+{{ $img := or .Params.featured_image .Params.featureImage .Params.cover }}
+{{ $bg := or $img "/images/art/map/finalmap.png" }}
+<style>
+  body.map-surface {
+    --map-tile: calc(100vw * 1.32);
+    background-color: #f3e3c6;
+    background-image:
+      linear-gradient(rgba(243,227,198,0.82), rgba(243,227,198,0.82)),
+      url('{{ $bg }}');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 110% auto;
+    color: #1f1407;
+  }
+  body.map-surface::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.4), transparent 45%),
+                radial-gradient(circle at 80% 10%, rgba(255,255,255,0.3), transparent 40%),
+                radial-gradient(circle at 30% 80%, rgba(255,255,255,0.35), transparent 45%),
+                radial-gradient(circle at 80% 75%, rgba(255,255,255,0.28), transparent 40%);
+    mix-blend-mode: soft-light;
+    opacity: 0.8;
+    filter: blur(18px);
+  }
+  .map-page-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) 4rem;
+  }
+  .map-hero-card {
+    background: rgba(253,244,230,0.92);
+    border: 1px solid rgba(140,113,64,0.22);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+  }
+  .map-hero-title {
+    font-size: clamp(2.6rem, 6vw, 3.8rem);
+    margin: 0 0 0.75rem;
+  }
+  .map-hero-description {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin: 0 0 1.5rem;
+    color: rgba(31,20,7,0.75);
+  }
+  .map-hero-image {
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    margin: 0 0 1.5rem;
+    background: linear-gradient(180deg, rgba(253,244,230,0.95), rgba(242,222,170,0.85));
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    display: {{ if $img }}block{{ else }}none{{ end }};
+  }
+  .map-hero-image img {
+    width: 100%;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+  .map-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+</style>
+
+<div class="map-page-shell">
+  <div class="map-hero-card">
+    <h1 class="map-hero-title">{{ .Title }}</h1>
+    {{ with .Params.description }}
+      <p class="map-hero-description">{{ . }}</p>
+    {{ end }}
+    {{ if $img }}
+      <div class="map-hero-image">
+        <img src="{{ $img }}" alt="{{ .Title }} map">
+      </div>
+    {{ end }}
+    <div class="map-content">
+      {{ .Content }}
+    </div>
+  </div>
+</div>
+{{ end }}

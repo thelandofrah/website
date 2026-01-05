@@ -1,0 +1,221 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+{{ define "footer" }}{{ end }}
+
+{{ define "main" }}
+{{ $posts := .Pages }}
+{{ if gt (len $posts) 0 }}
+  {{ $posts = sort $posts "Date" "desc" }}
+{{ end }}
+<style>
+  footer { display: none !important; }
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .community-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 4vw, 2.75rem) 4rem;
+  }
+  .community-hero {
+    background: rgba(253,244,230,0.93);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .community-hero h1 {
+    margin: 0 0 0.6rem;
+    font-size: clamp(3rem, 7vw, 4.6rem);
+  }
+  .community-hero p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(0,0,0,0.72);
+  }
+  .community-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .community-search {
+    flex: 1 1 240px;
+  }
+  .community-search input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    font-size: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+  .community-sort select {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    font-size: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+  .community-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .community-card {
+    background: rgba(253,244,230,0.9);
+    border-radius: 20px;
+    padding: 1.4rem;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.15);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  .community-card:hover,
+  .community-card:focus {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 42px rgba(0,0,0,0.18);
+    filter: brightness(1.03);
+  }
+  .community-card__title {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+  .community-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(0,0,0,0.7);
+  }
+  .community-card__tags span {
+    background: rgba(0,0,0,0.08);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+  .community-card__desc {
+    margin: 0.2rem 0 0;
+    color: rgba(0,0,0,0.8);
+  }
+  .community-empty {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(0,0,0,0.6);
+  }
+  @media (max-width: 600px) {
+    .community-list { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="community-shell">
+  <div class="community-hero">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
+  </div>
+
+  <div class="community-controls">
+    <div class="community-search">
+      <input type="search" placeholder="Search posts..." aria-label="Search posts" data-community-search>
+    </div>
+    <div class="community-sort">
+      <select aria-label="Sort posts" data-community-sort>
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="community-list" data-community-list>
+    {{ if gt (len $posts) 0 }}
+      {{ range $posts }}
+        {{ $commentCount := len (.Params.comments | default slice) }}
+        <a class="community-card"
+           href="{{ .RelPermalink }}"
+           data-title="{{ lower .Title }}"
+           data-tags="{{ lower (delimit (.Params.tags | default slice) " ") }}"
+           data-date="{{ .Date.Unix }}">
+          <h2 class="community-card__title">{{ .Title }}</h2>
+          <div class="community-card__meta">
+            <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+            <span>•</span>
+            <span>{{ $commentCount }} {{ cond (eq $commentCount 1) "comment" "comments" }}</span>
+          </div>
+          {{ with .Params.tags }}
+            <div class="community-card__tags">
+              {{ range . }}<span>{{ . }}</span>{{ end }}
+            </div>
+          {{ end }}
+          {{ with or .Params.description .Summary }}
+            <p class="community-card__desc">{{ . }}</p>
+          {{ end }}
+        </a>
+      {{ end }}
+    {{ else }}
+      <p class="community-empty">No posts yet. Add a markdown file in <code>content/community/</code> to start the conversation.</p>
+    {{ end }}
+  </div>
+</div>
+
+<script>
+(() => {
+  const list = document.querySelector("[data-community-list]");
+  if (!list) return;
+  const cards = Array.from(list.querySelectorAll(".community-card"));
+  const search = document.querySelector("[data-community-search]");
+  const sort = document.querySelector("[data-community-sort]");
+
+  const apply = () => {
+    const q = (search?.value || "").trim().toLowerCase();
+    const mode = sort?.value || "newest";
+    const sorted = [...cards].sort((a, b) => {
+      const da = Number(a.dataset.date) || 0;
+      const db = Number(b.dataset.date) || 0;
+      return mode === "oldest" ? da - db : db - da;
+    });
+    sorted.forEach((card) => list.appendChild(card));
+    sorted.forEach((card) => {
+      const hay = (card.dataset.title + " " + card.dataset.tags).toLowerCase();
+      card.style.display = hay.includes(q) ? "" : "none";
+    });
+  };
+
+  search?.addEventListener("input", apply);
+  sort?.addEventListener("change", apply);
+  apply();
+})();
+</script>
+{{ end }}

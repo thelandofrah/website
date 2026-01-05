@@ -1,0 +1,90 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "main" }}
+<style>
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .art-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .art-card__inner {
+    background: rgba(253,244,230,0.9);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 14px 26px rgba(0,0,0,0.1);
+    transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.45s ease, filter 0.35s ease;
+    will-change: transform;
+  }
+  .art-card__inner img {
+    border-radius: 12px;
+  }
+  .art-card:hover .art-card__inner,
+  .art-card:focus .art-card__inner {
+    animation: artCardWiggle 0.9s ease-in-out infinite alternate;
+    box-shadow: 0 28px 40px rgba(0,0,0,0.2);
+    filter: brightness(1.03) saturate(1.06);
+  }
+  @keyframes artCardWiggle {
+    0% { transform: translateY(-6px) rotate(-0.9deg) scale(1.02); }
+    100% { transform: translateY(-10px) rotate(0.9deg) scale(1.04); }
+  }
+</style>
+<main class="mw8 center ph3 pv4">
+
+  <h1 class="f1">{{ .Title }}</h1>
+
+  <div class="flex flex-wrap">
+
+    {{ range .Pages }}
+      <div class="w-50 w-25-ns pa3">
+        <a href="{{ .RelPermalink }}" class="art-card">
+          <div class="art-card__inner">
+
+            <!-- Thumbnail -->
+            {{ with .Params.featured_image }}
+              <img src="{{ . }}" class="db w-100 mb2" />
+            {{ end }}
+
+            <!-- Title -->
+            <h2 class="f4 mt2 mb1">{{ .Title }}</h2>
+
+            <!-- Optional metadata under thumbnail -->
+            {{ with .Params.curator }}
+              <p class="f6 gray mt0 mb1">Curated by {{ . }}</p>
+            {{ end }}
+
+            {{ with .Params.description }}
+              <p class="f6 mt0 gray">{{ . }}</p>
+            {{ end }}
+
+          </div>
+        </a>
+      </div>
+    {{ end }}
+
+  </div>
+</main>
+{{ end }}

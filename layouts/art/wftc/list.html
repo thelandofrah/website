@@ -1,0 +1,213 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+  {{ $galleryDir := "images/art/wftc" }}
+  {{ $readPath := printf "static/%s" $galleryDir }}
+  {{ $files := readDir $readPath }}
+  {{ $allowedExt := slice ".jpg" ".jpeg" ".png" ".gif" ".webp" }}
+  {{ $heroImages := slice }}
+  {{ range $files }}
+    {{ if not .IsDir }}
+      {{ $ext := lower (path.Ext .Name) }}
+      {{ if in $allowedExt $ext }}
+        {{ $heroImages = $heroImages | append (printf "/%s/%s" $galleryDir .Name) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if gt (len $heroImages) 0 }}
+    {{ $slideDuration := 12 }}
+    {{ $cycleDuration := mul (len $heroImages) $slideDuration }}
+    <style>
+      .fob-hero-strip {
+        position: relative;
+        overflow: hidden;
+        min-height: 420px;
+        background: #05060b;
+      }
+      .fob-hero-strip__slides {
+        position: absolute;
+        inset: 0;
+      }
+      .fob-hero-strip__slide {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        animation: fobHeroStripFade linear infinite;
+      }
+      .fob-hero-strip__overlay {
+        position: relative;
+        z-index: 3;
+        background: transparent;
+      }
+      .fob-hero-strip__content {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: clamp(2rem, 4vw, 4rem);
+        color: #fff;
+      }
+      .fob-hero-strip__title {
+        font-size: clamp(2.8rem, 6vw, 4.6rem);
+        font-weight: 800;
+        margin: 2rem 0 0.75rem;
+        background-image: linear-gradient(120deg,
+          #a6d8ff,
+          #c4e6ff,
+          #dff5ff,
+          #b6e9ff);
+        background-size: 250% 250%;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: heroStripTitleShift 12s ease-in-out infinite;
+      }
+      .fob-hero-strip__text {
+        position: relative;
+        display: inline-block;
+        padding: clamp(1rem, 2vw, 2rem) clamp(2rem, 4vw, 3rem);
+        z-index: 2;
+      }
+      .fob-hero-strip__text::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(5,7,16,0.45);
+        filter: blur(28px);
+        border-radius: 24px;
+        z-index: -1;
+      }
+      .fob-hero-strip__description {
+        font-size: 1.2rem;
+        max-width: 680px;
+        color: rgba(255,255,255,0.97);
+        margin: 0 0 1rem;
+        line-height: 1.7;
+      }
+      @keyframes fobHeroStripFade {
+        0% { opacity: 0; }
+        1% { opacity: 1; }
+        60% { opacity: 1; }
+        63% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes heroStripTitleShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    </style>
+    <header class="fob-hero-strip">
+      <div class="fob-hero-strip__slides">
+        {{ range $index, $img := $heroImages }}
+          <div class="fob-hero-strip__slide"
+               style="background-image:url('{{ $img }}');animation-duration:{{ $cycleDuration }}s;animation-delay:{{ mul $index $slideDuration }}s;">
+          </div>
+        {{ end }}
+      </div>
+      <div class="fob-hero-strip__overlay">
+        {{ partials.Include "site-navigation.html" . }}
+        <div class="fob-hero-strip__content">
+          <div class="fob-hero-strip__text">
+            <h1 class="fob-hero-strip__title">{{ .Title }}</h1>
+            {{ with .Params.description }}
+              <p class="fob-hero-strip__description">{{ . }}</p>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </header>
+  {{ else }}
+    {{ partials.Include "site-header.html" . }}
+  {{ end }}
+{{ end }}
+
+{{ define "main" }}
+<style>
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .gallery-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .gallery-card__inner {
+    background: rgba(253,244,230,0.93);
+    border-radius: 20px;
+    padding: 1.4rem;
+    box-shadow: 0 18px 32px rgba(0,0,0,0.12);
+    transition: transform 0.48s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.48s ease, filter 0.35s ease;
+    will-change: transform;
+  }
+  .gallery-card__inner img {
+    border-radius: 12px;
+  }
+  .gallery-card:hover .gallery-card__inner,
+  .gallery-card:focus .gallery-card__inner {
+    animation: galleryWiggle 0.9s ease-in-out infinite alternate;
+    box-shadow: 0 32px 45px rgba(0,0,0,0.22);
+    filter: brightness(1.05) saturate(1.08);
+  }
+  @keyframes galleryWiggle {
+    0% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
+    100% { transform: translateY(-11px) rotate(1deg) scale(1.05); }
+  }
+</style>
+  <main class="mw8 center ph4 pv5">
+
+    <!-- Artwork Grid -->
+    <div class="flex flex-wrap justify-between">
+      {{ range .Pages }}
+        <div class="w-100 w-30-ns pa3">
+          <a href="{{ .RelPermalink }}" class="gallery-card">
+            <div class="gallery-card__inner">
+
+              <!-- Thumbnail -->
+              {{ with .Params.featured_image }}
+                <img src="{{ . }}" alt="{{ $.Title }}" class="db w-100 mb2" />
+              {{ end }}
+
+              <!-- Title -->
+              <h2 class="f4 mt2 mb1">{{ .Title }}</h2>
+
+              <!-- Artist -->
+              {{ with .Params.artist }}
+                <p class="f6 mt0 mb1">{{ . }}</p>
+              {{ end }}
+
+              <!-- Price -->
+              {{ with .Params.price }}
+                <p class="f6 mt0 gray">{{ . }}</p>
+              {{ end }}
+
+            </div>
+          </a>
+        </div>
+      {{ end }}
+    </div>
+
+  </main>
+{{ end }}

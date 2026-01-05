@@ -1,0 +1,107 @@
+{{ define "body-extra-class" }}map-surface{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+{{ $embed := "https://landofrah.dasautomat.com/" }}
+{{ $mapBg := "/images/art/map/finalmap.png" }}
+<style>
+  body.map-surface {
+    --map-tile: calc(100vw * 1.32);
+    background-color: #f3e3c6;
+    background-image: url('{{ $mapBg }}');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 110% auto;
+    color: #1f1407;
+  }
+  .merch-shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 4vw, 2.75rem) 4rem;
+  }
+  .merch-hero {
+    background: rgba(253,244,230,0.93);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .merch-hero h1 {
+    margin: 0 0 0.6rem;
+    font-size: clamp(3rem, 7vw, 4.6rem);
+  }
+  .merch-hero p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(0,0,0,0.72);
+  }
+  .merch-card {
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    border-radius: 22px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    text-align: center;
+  }
+  .merch-card h2 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(2.2rem, 6vw, 3rem);
+  }
+  .merch-card p {
+    margin: 0 0 1rem;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.7;
+  }
+  .merch-preview {
+    margin: 1.25rem auto 0;
+    text-align: center;
+  }
+  .merch-preview img {
+    max-width: 100%;
+    width: min(960px, 100%);
+    border-radius: 18px;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.24);
+  }
+  .merch-cta a {
+    display: inline-block;
+    background: linear-gradient(130deg, #f7c3ff, #8dbdff, #ffdfa8);
+    color: #0a0a0a;
+    padding: 0.85rem 1.6rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .merch-cta a:hover,
+  .merch-cta a:focus {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="merch-shell">
+  <div class="merch-hero">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
+  </div>
+  <div class="merch-card">
+    <h2>Shop the full store</h2>
+    <p class="merch-cta">
+      <a href="{{ $embed }}" target="_blank" rel="noopener">Open store in a new tab →</a>
+    </p>
+    <div class="merch-preview">
+      <img src="/images/merchpreview.png" alt="Merch preview">
+    </div>
+  </div>
+</div>
+{{ end }}

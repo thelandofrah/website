@@ -1,0 +1,139 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+{{ define "footer" }}{{ end }}
+
+{{ define "main" }}
+{{ $comments := .Params.comments | default slice }}
+<style>
+  footer { display: none !important; }
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .community-shell {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 4vw, 2.75rem) 4rem;
+  }
+  .community-post {
+    background: rgba(253,244,230,0.93);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+  }
+  .community-post h1 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(2.6rem, 6vw, 3.6rem);
+  }
+  .community-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    color: rgba(0,0,0,0.68);
+    margin-bottom: 1rem;
+  }
+  .community-tags span {
+    background: rgba(0,0,0,0.08);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  .community-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+  .community-comments {
+    margin-top: 2rem;
+    background: rgba(0,0,0,0.05);
+    border-radius: 18px;
+    padding: 1.25rem 1.5rem;
+  }
+  .community-comments h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.4rem;
+  }
+  .community-comment {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .community-comment:last-child { border-bottom: none; }
+  .community-comment__meta {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .community-comment__body {
+    margin: 0.3rem 0 0;
+    color: rgba(0,0,0,0.82);
+  }
+  .community-reply {
+    margin-top: 1.25rem;
+    background: rgba(0,0,0,0.07);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+  }
+  .community-reply p {
+    margin: 0;
+  }
+</style>
+
+<div class="community-shell">
+  <div class="community-post">
+    <h1>{{ .Title }}</h1>
+    <div class="community-meta">
+      <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+      {{ with .Params.tags }}
+        <span>•</span>
+        <div class="community-tags">
+          {{ range . }}<span>{{ . }}</span>{{ end }}
+        </div>
+      {{ end }}
+    </div>
+    <div class="community-body">
+      {{ .Content }}
+    </div>
+
+    <div class="community-comments">
+      <h2>{{ len $comments }} {{ cond (eq (len $comments) 1) "Comment" "Comments" }}</h2>
+      {{ if gt (len $comments) 0 }}
+        {{ range $comments }}
+          <div class="community-comment">
+            <div class="community-comment__meta">{{ .name }} — {{ .date }}</div>
+            <p class="community-comment__body">{{ .body }}</p>
+          </div>
+        {{ end }}
+      {{ else }}
+        <p>No comments yet.</p>
+      {{ end }}
+      <div class="community-reply">
+        <p><strong>Want to reply?</strong> This site is static, so replies aren’t stored automatically. Add a new comment to this post’s frontmatter (under <code>comments</code>) or message the team to have it added.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

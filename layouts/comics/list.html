@@ -1,0 +1,182 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+<header>
+  <div class="bg-black pv3 ph3 ph4-ns">
+    {{ partials.Include "site-navigation.html" . }}
+  </div>
+</header>
+{{ end }}
+{{ define "footer" }}{{ end }}
+
+{{ define "main" }}
+<style>
+  footer {
+    display: none !important;
+  }
+  footer {
+    display: none !important;
+  }
+  body.music-spectrum {
+    --map-tile: calc(100vw * 1.415);
+    background-color: #f2deaa;
+    background-image: linear-gradient(rgba(242,222,170,0.5), rgba(242,222,170,0.5)), url('/images/art/map/finalmap.png');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 100% auto;
+  }
+  body.music-spectrum::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(242,222,170,0.45) 0%,
+      rgba(242,222,170,0.25) 2%,
+      rgba(242,222,170,0.08) 6%,
+      rgba(242,222,170,0) 12%,
+      rgba(242,222,170,0) 88%,
+      rgba(242,222,170,0.08) 94%,
+      rgba(242,222,170,0.25) 98%,
+      rgba(242,222,170,0.45) 100%);
+    background-size: 100% var(--map-tile);
+    background-repeat: repeat-y;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    filter: blur(35px);
+  }
+  .comic-page-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) 4rem;
+  }
+  .comic-main-hero {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    animation: comicHeroDrop 0.9s ease-out forwards;
+  }
+  .comic-hero-card {
+    background: rgba(253,244,230,0.92);
+    border-radius: 24px;
+    padding: 2rem clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+    width: min(900px, 92vw);
+  }
+  .comic-hero-card h1 {
+    font-size: clamp(3rem, 8vw, 4.6rem);
+    margin: 0;
+  }
+  .comic-main-title {
+    margin: 0;
+  }
+  .comic-main-body {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+  .comic-main-body p { margin: 0.75rem 0; }
+  .comic-collection-heading {
+    font-size: clamp(2.4rem, 5vw, 3.2rem);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+  .comic-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .comic-card__inner {
+    background: rgba(253,244,230,0.95);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    height: 100%;
+    transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.45s ease, filter 0.35s ease;
+  }
+  .comic-card__inner img {
+    border-radius: 12px;
+    margin-bottom: 1rem;
+  }
+  .comic-card__meta {
+    color: #5e5e5e;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+  .comic-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    margin-top: 0.9rem;
+  }
+  .comic-card:hover .comic-card__inner,
+  .comic-card:focus .comic-card__inner {
+    animation: comicCardWiggle 0.9s ease-in-out infinite alternate;
+    box-shadow: 0 25px 40px rgba(0,0,0,0.18);
+    filter: brightness(1.04) saturate(1.06);
+  }
+  @keyframes comicHeroDrop {
+    0% { transform: translateY(-80px); opacity: 0; }
+    60% { transform: translateY(8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes comicCardWiggle {
+    0% { transform: translateY(-6px) rotate(-0.8deg) scale(1.01); }
+    100% { transform: translateY(-10px) rotate(0.8deg) scale(1.03); }
+  }
+</style>
+
+<div class="comic-page-shell">
+  <div class="comic-main-hero">
+    <div class="comic-hero-card">
+      <h1 class="comic-main-title">{{ .Title }}</h1>
+    </div>
+    {{ with .Content }}
+      <div class="comic-hero-card comic-main-body">
+        {{ . }}
+      </div>
+    {{ else }}
+      {{ with .Params.description }}
+        <div class="comic-hero-card comic-main-body">
+          <p>{{ . }}</p>
+        </div>
+      {{ end }}
+    {{ end }}
+  </div>
+
+  <h2 class="comic-collection-heading">Series</h2>
+
+  <div class="flex flex-wrap">
+    {{ range .Pages }}
+      <div class="w-100 w-50-ns pa3">
+        <a class="comic-card" href="{{ .RelPermalink }}">
+          <div class="comic-card__inner">
+            {{ $img := or .Params.featured_image .Params.cover .Params.thumbnail }}
+            {{ if $img }}
+              <img src="{{ $img }}" alt="{{ .Title }} cover" class="db w-100">
+            {{ end }}
+            <h3 class="mt0 mb2">{{ .Title }}</h3>
+            {{ with .Params.description }}
+              <p class="mv0">{{ . }}</p>
+            {{ end }}
+            <div class="comic-card__meta">
+              {{ with .Params.page_count }}
+                {{ . }} pages
+              {{ end }}
+            </div>
+            <span class="comic-card__cta">Enter comic →</span>
+          </div>
+        </a>
+      </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

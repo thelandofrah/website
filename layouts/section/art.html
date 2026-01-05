@@ -1,0 +1,146 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}
+  {{ partials.Include "page-header.html" . }}
+{{ end }}
+
+{{ define "main" }}
+<style>
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .art-page-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  .art-main-hero {
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    animation: artHeroDrop 0.9s ease-out forwards;
+    transform-origin: center top;
+  }
+  .art-main-title {
+    font-size: clamp(3rem, 8vw, 4.8rem);
+    margin-bottom: 1rem;
+  }
+  .art-main-body {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+  .art-main-body p {
+    margin: 0.75rem 0;
+  }
+  .art-main-description {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: rgba(0,0,0,0.75);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  @keyframes artHeroDrop {
+    0% { transform: translateY(-90px); opacity: 0; }
+    60% { transform: translateY(8px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  .art-gallery-heading {
+    font-size: clamp(2.6rem, 5vw, 3.4rem);
+    letter-spacing: 0.04em;
+    margin: 2rem 0 1.5rem;
+  }
+  .art-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .art-card__inner {
+    background: rgba(253,244,230,0.92);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    transition: transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.45s ease, filter 0.35s ease;
+    will-change: transform;
+  }
+  .art-card__inner img {
+    border-radius: 12px;
+  }
+  .art-card:hover .art-card__inner,
+  .art-card:focus .art-card__inner {
+    animation: artCardWiggle 0.9s ease-in-out infinite alternate;
+    box-shadow: 0 25px 40px rgba(0,0,0,0.18);
+    filter: brightness(1.03) saturate(1.05);
+  }
+  @keyframes artCardWiggle {
+    0% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
+    100% { transform: translateY(-10px) rotate(1deg) scale(1.04); }
+  }
+</style>
+  <div class="art-page-shell">
+
+    <div class="art-main-hero">
+      <h1 class="art-main-title">{{ .Title }}</h1>
+      {{ with .Content }}
+        <div class="art-main-body">
+          {{ . }}
+        </div>
+      {{ else }}
+        {{ with .Params.description }}
+          <p class="art-main-description">{{ . }}</p>
+        {{ end }}
+      {{ end }}
+    </div>
+
+    <h2 class="art-gallery-heading">Galleries</h2>
+
+    <div class="flex flex-wrap">
+
+      {{ range .Sections}}
+        <div class="w-100 w-50-ns pa3">
+          <a href="{{ .RelPermalink }}" class="art-card">
+            <div class="art-card__inner">
+
+              {{ with .Params.featured_image }}
+                <img src="{{ . }}" class="db w-100 mb3" />
+              {{ end }}
+
+              <h2 class="f3 mt0 mb2">{{ .Title }}</h2>
+
+              {{ with .Params.curator }}
+                <p class="f5 gray mt0 mb1">Curated by {{ . }}</p>
+              {{ end }}
+
+              {{ with .Params.description }}
+                <p class="f5 gray mt0">{{ . }}</p>
+              {{ end }}
+
+            </div>
+          </a>
+        </div>
+      {{ end }}
+
+    </div>
+
+  </div>
+{{ end }}
