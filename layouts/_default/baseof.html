@@ -42,7 +42,7 @@
     </style>
 
     {{ block "favicon" . }}
-      {{ partials.IncludeCached "site-favicon.html" . }}
+      {{ partialCached "site-favicon.html" . }}
     {{ end }}
 
     {{ if .OutputFormats.Get "RSS" }}
@@ -68,17 +68,17 @@
       {{/* former internal template */}}
       {{ partial "google_analytics.html" . }}
     {{ end }}
-	{{ block "head" . }}{{ partials.Include "head-additions.html" . }}{{ end }}
+	{{ block "head" . }}{{ partial "head-additions.html" . }}{{ end }}
   </head>
 
   {{- $environment := hugo.Environment | compare.Default "production" -}}
   {{ $bodyClasses := site.Params.body_classes | compare.Default "avenir bg-near-white" }}
   <body class="ma0 {{ $bodyClasses }} {{ block "body-extra-class" . }}{{ end }} {{ $environment }}">
 
-    {{ block "header" . }}{{ partials.Include "site-header.html" .}}{{ end }}
+    {{ block "header" . }}{{ partial "site-header.html" . }}{{ end }}
     <main class="pb7" role="main">
       {{ block "main" . }}{{ end }}
     </main>
-    {{ block "footer" . }}{{ partials.IncludeCached "site-footer.html" . }}{{ end }}
+    {{ block "footer" . }}{{ partialCached "site-footer.html" . }}{{ end }}
   </body>
 </html>
