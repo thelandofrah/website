@@ -1,9 +1,15 @@
-public/
-resources/
-.DS_Store
-.hugo_build.lock
 # Hugo build output
 public/
+resources/
+.hugo_build.lock
 
-# Large artwork files
-static/images/
+# macOS junk
+.DS_Store
+
+# never commit original image formats
+**/*.jpg
+**/*.jpeg
+**/*.png
+
+# allow optimized web images
+!**/*.webp
