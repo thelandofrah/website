@@ -25,7 +25,11 @@
     {{ $chapterAudio = merge $chapterAudio (dict $pageKey $trackList) }}
   {{ end }}
 {{ end }}
-{{ if and $prefix (gt $pageCount 0) }}
+{{ $explicitPages := .Params.pages }}
+{{ if $explicitPages }}
+  {{ $pages = $explicitPages }}
+  {{ $pageCount = len $pages }}
+{{ else if and $prefix (gt $pageCount 0) }}
   {{ range seq 1 $pageCount }}
     {{ $num := printf "%0*d" $digits . }}
     {{ $pages = $pages | append (printf "%s%s%s" $prefix $num $extension) }}
@@ -232,7 +236,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    cursor: pointer;
+    position: relative;
+    cursor: zoom-in;
     overflow: hidden;
     border-radius: 18px;
   }
@@ -244,6 +249,14 @@
     max-width: 100%;
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     clip-path: inset(1.4% round 14px);
+    transition: transform 0.2s ease;
+  }
+  .comic-page.zoomed {
+    cursor: zoom-out;
+  }
+  .comic-page.zoomed img {
+    transform: scale(1.6);
+    transform-origin: center;
   }
   .comic-carousel {
     display: flex;
@@ -341,8 +354,8 @@
       box-sizing: border-box;
     }
     .comic-page-wrap {
-      width: min(900px, 100%);
-    }
+    width: min(900px, 100%);
+  }
     .comic-page-audio {
       width: 100%;
     }
@@ -357,16 +370,16 @@
 <div id="comic-top"></div>
 <div class="comic-reader-shell">
   <div class="comic-reader-hero">
-    <div class="comic-hero-card comic-hero-title">
+    <div class="comic-hero-card comic-hero-title hero-drop">
       <h1>{{ $title }}</h1>
     </div>
     {{ with .Content }}
-      <div class="comic-hero-card comic-hero-description">
+      <div class="comic-hero-card comic-hero-description hero-drop">
         {{ . }}
       </div>
     {{ else }}
       {{ with .Params.description }}
-        <div class="comic-hero-card comic-hero-description">
+        <div class="comic-hero-card comic-hero-description hero-drop">
           <p>{{ . }}</p>
         </div>
       {{ end }}
@@ -538,10 +551,7 @@
 
   document.querySelectorAll('.comic-page').forEach(page => {
     page.addEventListener('click', () => {
-      currentIndex = Number(page.dataset.pageIndex) - 1;
-      updateCarousel();
-      setMode('pager');
-      carousel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      page.classList.toggle('zoomed');
     });
   });
 

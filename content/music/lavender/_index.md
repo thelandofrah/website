@@ -16,7 +16,7 @@ Written by Ruby Foggo & Julian Hovenden, following Ruby's character 'Lizzy the L
 
 ## Stream
 - [Tidal](https://tidal.com/album/331555907/u)
-
+- [Spotify](https://open.spotify.com/album/7r3A7Q80asAJ9jZ3EGxWYp?si=eKykjYnuTPuTVrW4354qOA)
 
 
 

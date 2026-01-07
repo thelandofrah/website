@@ -32,6 +32,7 @@ I hope you enjoy.
 
 ## Stream
 - [Tidal](https://tidal.com/album/428843504/u)
+- [Spotify](https://open.spotify.com/album/1jJduO7FJIvef3BratlAjQ?si=HYROo1lzTHiuDv_K8RkgOQ)
 
 
 

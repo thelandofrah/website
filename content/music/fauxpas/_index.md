@@ -16,7 +16,7 @@ Should have been there this show was epic
 
 ## Stream
 - [Tidal](https://tidal.com/album/332586429/u)
-
+- [Spotify](https://open.spotify.com/album/56Etdbt4FtOKGblIuesVWL?si=ZiFfKf18TCe8LqTH0A1qSw)
 
 
 

@@ -16,7 +16,7 @@ wooooooOOOOooooo
 
 ## Stream
 - [Tidal](https://tidal.com/album/332333256/u)
-
+- [Spotify](https://open.spotify.com/album/6AeZwZ9juhlCTKdbpE8t8Z?si=FXbDYVZ9T2CKLI3Kc1X6pw)
 
 
 

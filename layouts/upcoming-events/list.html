@@ -68,7 +68,7 @@
 
 <div class="upcoming-shell">
   <div class="upcoming-hero">
-    <div class="upcoming-card">
+    <div class="upcoming-card hero-drop">
       <h1 class="upcoming-title">{{ .Title }}</h1>
       {{ with .Params.description }}<p class="upcoming-body">{{ . }}</p>{{ end }}
       {{ if not (gt (len $items) 0) }}

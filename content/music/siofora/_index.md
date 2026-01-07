@@ -16,7 +16,7 @@ Our first song with Betty + I think the first song hugo & I officially put out t
 
 ## Stream
 - [Tidal](https://tidal.com/album/333475585/u)
-
+- [Spotify](https://open.spotify.com/album/3J4dcKVBVTr1VNCvcUtVgS?si=_zXUpOLHRD6lryLail94lQ)
 
 
 

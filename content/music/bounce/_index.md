@@ -16,7 +16,7 @@ Breaks, idm, idk. Was a dream come true to release on lovejoy. Reflex Blue stiff
 
 ## Stream
 - [Tidal](https://tidal.com/album/333608443/u)
-
+- [Spotify](https://open.spotify.com/album/71HypDnr39jsSy5KO87orP?si=UGCcoS1zQuKzeUeVv4kZvA)
 
 
 

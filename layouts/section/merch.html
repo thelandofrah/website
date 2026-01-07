@@ -69,6 +69,79 @@
     border-radius: 18px;
     box-shadow: 0 16px 32px rgba(0,0,0,0.24);
   }
+  .merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.75rem;
+  }
+  .merch-item {
+    background: rgba(253,244,230,0.92);
+    border-radius: 18px;
+    padding: 1rem;
+    box-shadow: 0 16px 28px rgba(0,0,0,0.14);
+    text-align: center;
+  }
+  .merch-item img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 14px;
+    box-shadow: 0 12px 22px rgba(0,0,0,0.16);
+  }
+  .merch-thumb {
+    width: 120px;
+    height: auto;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin: 0 auto;
+    display: block;
+  }
+  .merch-item img.merch-thumb { width: 120px; }
+  .merch-thumb:hover { transform: translateY(-2px); box-shadow: 0 14px 26px rgba(0,0,0,0.2); }
+  .merch-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 999;
+  }
+  .merch-lightbox.is-open { display: flex; }
+  .merch-lightbox__inner {
+    position: relative;
+    max-width: min(960px, 90vw);
+    max-height: 85vh;
+    background: rgba(0,0,0,0.9);
+    border-radius: 18px;
+    padding: 1rem;
+    box-shadow: 0 24px 45px rgba(0,0,0,0.35);
+  }
+  .merch-lightbox__inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+  }
+  .merch-lightbox__close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.6rem;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
   .merch-cta a {
     display: inline-block;
     background: linear-gradient(130deg, #f7c3ff, #8dbdff, #ffdfa8);
@@ -89,7 +162,7 @@
 </style>
 
 <div class="merch-shell">
-  <div class="merch-hero">
+  <div class="merch-hero hero-drop">
     <h1>{{ .Title }}</h1>
     {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
   </div>
@@ -102,5 +175,43 @@
       <img src="/images/merchpreview.png" alt="Merch preview">
     </div>
   </div>
+
+  <div class="merch-grid">
+    <div class="merch-item">
+      <img src="/images/tshirtsecret.webp" alt="Secret tee preview" class="merch-thumb" data-merch-full="/images/tshirtsecret.webp">
+    </div>
+  </div>
 </div>
+
+<div class="merch-lightbox" data-merch-lightbox>
+  <div class="merch-lightbox__inner">
+    <button class="merch-lightbox__close" type="button" aria-label="Close">×</button>
+    <img src="" alt="Merch full view" data-merch-lightbox-img>
+  </div>
+</div>
+<script>
+(() => {
+  const thumb = document.querySelector('[data-merch-full]');
+  const lightbox = document.querySelector('[data-merch-lightbox]');
+  const lightboxImg = document.querySelector('[data-merch-lightbox-img]');
+  const closeBtn = document.querySelector('.merch-lightbox__close');
+  if (!thumb || !lightbox || !lightboxImg || !closeBtn) return;
+  const open = () => {
+    lightboxImg.src = thumb.dataset.merchFull || thumb.src;
+    lightbox.classList.add('is-open');
+  };
+  const close = () => {
+    lightbox.classList.remove('is-open');
+    lightboxImg.src = '';
+  };
+  thumb.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
 {{ end }}

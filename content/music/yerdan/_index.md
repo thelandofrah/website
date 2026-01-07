@@ -20,6 +20,7 @@ Covid project, written by Emeris & I.
 
 ## Stream
 - [Tidal](https://tidal.com/album/333688627/u)
+- [Spotify](https://open.spotify.com/album/3nYLdvmqXj5WKIJXXOxnxB?si=vCB8fQgJQGCXOKMMNDX4Kw)
 
 
 

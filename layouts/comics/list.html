@@ -1,15 +1,9 @@
 {{ define "body-extra-class" }}music-spectrum{{ end }}
 {{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
-{{ define "footer" }}{{ end }}
+{{ define "footer" }}{{ partials.Include "site-footer.html" . }}{{ end }}
 
 {{ define "main" }}
 <style>
-  footer {
-    display: none !important;
-  }
-  footer {
-    display: none !important;
-  }
   body.music-spectrum {
     --map-tile: calc(100vw * 1.415);
     background-color: #f2deaa;
@@ -112,6 +106,15 @@
     font-weight: 600;
     margin-top: 0.9rem;
   }
+  .comic-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,360px));
+    gap: 2.4rem;
+    justify-content: center;
+    align-items: start;
+  }
   .comic-card:hover .comic-card__inner,
   .comic-card:focus .comic-card__inner {
     animation: comicCardWiggle 0.9s ease-in-out infinite alternate;
@@ -141,20 +144,39 @@
     0% { transform: translateY(-6px) rotate(-0.8deg) scale(1.01); }
     100% { transform: translateY(-10px) rotate(0.8deg) scale(1.03); }
   }
+  @media (max-width: 1024px) {
+    .comic-grid {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+    .comic-card__inner {
+      padding: 1.25rem;
+    }
+  }
+  @media (max-width: 640px) {
+    .comic-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.75rem;
+    }
+    .comic-card__inner {
+      animation: none;
+      transform: none;
+    }
+  }
 </style>
 
 <div class="comic-page-shell">
   <div class="comic-main-hero">
-    <div class="comic-hero-card">
+    <div class="comic-hero-card hero-drop">
       <h1 class="comic-main-title">{{ .Title }}</h1>
     </div>
     {{ with .Content }}
-      <div class="comic-hero-card comic-main-body">
+      <div class="comic-hero-card comic-main-body hero-drop">
         {{ . }}
       </div>
     {{ else }}
       {{ with .Params.description }}
-        <div class="comic-hero-card comic-main-body">
+        <div class="comic-hero-card comic-main-body hero-drop">
           <p>{{ . }}</p>
         </div>
       {{ end }}
@@ -163,7 +185,7 @@
 
   <h2 class="comic-collection-heading">Series</h2>
 
-  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,360px));gap:2.2rem;justify-content:center;">
+  <div class="comic-grid">
     {{ range .Pages }}
       <a class="comic-card" href="{{ .RelPermalink }}" style="height:100%;">
         <div class="comic-card__inner">

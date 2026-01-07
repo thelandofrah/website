@@ -16,7 +16,7 @@ Recording a little squashed, but this was a damn good time.
 
 ## Stream
 - [Tidal](https://tidal.com/album/464128306/u)
-
+- [Spotify](https://open.spotify.com/album/6PT4MMfbXIMn2MyQYQffco?si=N9H2fy9kQvOBkcwTCFxwVg)
 
 
 

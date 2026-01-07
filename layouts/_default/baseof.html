@@ -39,6 +39,23 @@
         font-family: 'Playfair Display', serif;
         letter-spacing: 0.01em;
       }
+      .hero-drop {
+        opacity: 0;
+        transform: translateY(-60px);
+        animation: heroDropIn 0.9s ease-out forwards;
+      }
+      @keyframes heroDropIn {
+        0% { transform: translateY(-60px); opacity: 0; }
+        65% { opacity: 1; transform: translateY(6px); }
+        100% { transform: translateY(0); opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-drop {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+      }
     </style>
 
     {{ block "favicon" . }}

@@ -1,9 +1,11 @@
 {{ define "main" }}
 <style>
-  .album-body a[href*="tidal.com"] {
+  .album-body a[href*="tidal.com"],
+  .album-body a[href*="spotify.com"] {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    margin: 0 0.5rem 0.5rem 0;
     background: rgba(0,0,0,0.82);
     color: #fff;
     padding: 0.65rem 1rem;
@@ -15,15 +17,29 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   }
   .album-body a[href*="tidal.com"]:hover,
-  .album-body a[href*="tidal.com"]:focus {
+  .album-body a[href*="tidal.com"]:focus,
+  .album-body a[href*="spotify.com"]:hover,
+  .album-body a[href*="spotify.com"]:focus {
     transform: translateY(-2px);
     box-shadow: 0 18px 34px rgba(0,0,0,0.22);
     filter: brightness(1.08);
   }
-  .album-body a[href*="tidal.com"]::before {
+  .album-body a[href*="tidal.com"]::before,
+  .album-body a[href*="spotify.com"]::before {
     content: "↗";
     font-size: 0.95rem;
     opacity: 0.9;
+  }
+  /* Force Spotify button label */
+  .album-body a[href*="spotify.com"] {
+    position: relative;
+    font-size: 0;
+  }
+  .album-body a[href*="spotify.com"]::after {
+    content: "Spotify";
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
   }
 </style>
 <div style="max-width:800px;margin:0 auto;">

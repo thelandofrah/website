@@ -16,6 +16,7 @@ A venture in not overthinking a release, 3 nice songs
 
 ## Stream
 - [Tidal](https://tidal.com/album/335128944/u)
+- [Spotify](https://open.spotify.com/album/5wkROk12nvC9vFVVVGWgMC?si=TTPpyU-ETj-PIp_UL6i9Yw)
 
 
 

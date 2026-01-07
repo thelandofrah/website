@@ -5,11 +5,6 @@
 {{ define "main" }}
 {{ $galleryDir := .Params.gallery_dir | default (printf "images/events/%s" .File.TranslationBaseName) }}
 {{ $images := slice }}
-{{ $rotateMap := dict
-  "rave1" (slice "img_3102.jpeg" "img_3103.jpeg" "img_3104.jpeg" "img_3105.jpeg" "img_3106.jpeg" "img_3107.jpeg" "img_3108.jpeg" "img_3109.jpeg" "img_3422.jpeg" "img_3424.jpeg" "img_3425.jpeg" "img_8586.jpg" "img_8587.jpg" "img_8588.jpg" "img_8589.jpg" "img_8590.jpg" "img_8591.jpg" "img_8592.jpg" "img_8593.jpg" "img_8594.jpg" "img_8595.jpg" "img_8596.jpg" "img_8597.jpg" "img_8598.jpg" "img_8603.jpeg" "img_8604.jpeg")
-  "asleepinblue" (slice "img_1430.jpeg" "img_1432.jpeg" "img_1434.jpeg" "img_1435.jpeg" "img_1436.jpeg" "img_3492.jpeg" "img_3494.jpeg" "img_3502.jpeg" "img_3503.jpeg" "img_3504.jpeg" "img_3519.jpeg" "img_3520.jpeg" "img_3527.jpg" "img_3528.jpg" "img_3529.jpg" "img_3530.jpg" "img_3531.jpg" "img_3532.jpg" "img_3533.jpg" "img_3534.jpg" "img_3535.jpg")
-}}
-{{ $eventKey := .File.TranslationBaseName }}
 {{ if $galleryDir }}
   {{ $readPath := printf "static/%s" $galleryDir }}
   {{ if fileExists $readPath }}
@@ -117,6 +112,16 @@
     transform-origin: center;
     max-width: min(80vh, 100vw);
     max-height: 65vh;
+  }
+  .event-frame img.rotate-270 {
+    transform: rotate(-90deg);
+    transform-origin: center;
+    max-width: min(80vh, 100vw);
+    max-height: 65vh;
+  }
+  .event-frame img.rotate-180 {
+    transform: rotate(180deg);
+    transform-origin: center;
   }
   .event-gallery__controls {
     display: flex;
@@ -227,7 +232,7 @@
 </style>
 
 <div class="event-page-shell">
-  <div class="event-hero-card">
+  <div class="event-hero-card hero-drop">
     <h1>{{ .Title }}</h1>
     {{ with .Params.description }}
       <p>{{ . }}</p>
@@ -238,17 +243,8 @@
     <div class="event-gallery" data-gallery>
       <div class="event-gallery__viewport">
         {{ range $index, $img := $images }}
-          {{ $imgClass := "" }}
-          {{ $base := lower (path.Base $img) }}
-          {{ $needsRotate := false }}
-          {{ with index $rotateMap $eventKey }}
-            {{ if in . $base }}{{ $needsRotate = true }}{{ end }}
-          {{ end }}
-          {{ if $needsRotate }}
-            {{ $imgClass = "rotate-90" }}
-          {{ end }}
           <figure class="event-frame{{ if eq $index 0 }} is-active{{ end }}" data-frame data-index="{{ $index }}">
-            <img class="{{ $imgClass }}" {{ if $needsRotate }}data-force-rotate="90"{{ end }} src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
+            <img src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
           </figure>
         {{ end }}
       </div>
@@ -347,12 +343,6 @@
   }
 
   function orientImage(img) {
-    const forced = img.dataset.forceRotate;
-    if (forced) {
-      img.classList.remove("rotate-90");
-      if (forced === "90") img.classList.add("rotate-90");
-      return;
-    }
     const src = img.getAttribute("src");
     if (!src) return;
     fetch(src)

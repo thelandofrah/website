@@ -1,12 +1,11 @@
 {{ define "body-extra-class" }}map-surface{{ end }}
 {{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
-{{ define "footer" }}{{ end }}
+{{ define "footer" }}{{ partials.Include "site-footer.html" . }}{{ end }}
 
 {{ define "main" }}
 {{ $mapBg := "/images/art/map/finalmap.png" }}
 {{ $logo := "/images/art/logos/originallogo.png" }}
 <style>
-  footer { display: none !important; }
   body.map-surface {
     --map-tile: calc(100vw * 1.32);
     background-color: #f3e3c6;
@@ -21,12 +20,13 @@
     z-index: 3;
   }
   .home-shell {
-    min-height: auto;
+    min-height: 82vh;
     display: grid;
     justify-items: center;
     align-items: start;
     padding: clamp(0.25rem, 1vw, 0.75rem);
     padding-top: 0.15rem;
+    padding-bottom: clamp(3rem, 8vw, 5rem);
     margin-top: -10rem;
     position: relative;
     z-index: 1;
@@ -38,6 +38,7 @@
     aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
+    overflow: visible;
   }
   .home-logo-wrap::before {
     content: "";
@@ -57,12 +58,26 @@
     filter: drop-shadow(0 20px 35px rgba(0,0,0,0.25));
     pointer-events: none;
   }
+  .home-logo-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .home-logo-slide {
+    z-index: 2;
+    transform: translateX(60vw) rotate(0.4deg);
+    opacity: 0;
+    animation: logoSliceIn 1.35s ease-out 0.15s forwards;
+    will-change: transform, opacity;
+  }
   @media (max-width: 640px) {
     body.map-surface { background-size: 170% auto; }
     .home-shell {
       margin-top: -3rem;
-      padding: 1.5rem 1rem 2.5rem;
-      min-height: 70vh;
+      padding: 1.5rem 1rem 3.5rem;
+      min-height: 88vh;
     }
     .home-logo-wrap {
       max-width: min(1260px, 88vw);
@@ -73,11 +88,32 @@
       filter: blur(35px);
     }
   }
+  @keyframes logoSliceIn {
+    0% {
+      transform: translateX(65vw) rotate(0.6deg);
+      opacity: 0;
+      filter: drop-shadow(0 20px 35px rgba(0,0,0,0.25));
+    }
+    55% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0) rotate(0deg);
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .home-logo-slide {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
 </style>
 
 <div class="home-shell">
   <div class="home-logo-wrap">
-    <img src="{{ $logo }}" alt="The Land of Rah logo" class="home-logo" loading="lazy">
+    <img src="{{ $logo }}" alt="The Land of Rah logo flying in" class="home-logo home-logo-layer home-logo-slide" loading="lazy">
   </div>
 </div>
 {{ end }}

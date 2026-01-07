@@ -6,6 +6,7 @@ page_prefix = "/images/art/comicbook/yerdanpage_Page_"
 page_digits = 3
 page_extension = ".png"
 page_count = 167
+weight = 1
 chapters = [
   { title = "Track 1", page = 2 },
   { title = "Track 2", page = 8 },

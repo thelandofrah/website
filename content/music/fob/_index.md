@@ -20,6 +20,7 @@ Written over the course of a breakup, the performance & recording of this album 
 
 ## Stream
 - [Tidal](https://tidal.com/album/482766120/u)
+- [Spotify](https://open.spotify.com/album/27xgg59Vf0vIwImVXDvdVW?si=ViFjDGNHShq6tfmjQGdj5g)
 
 
 
