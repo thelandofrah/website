@@ -170,6 +170,9 @@
     grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
     gap: 2rem;
   }
+  .music-page-pad {
+    padding: 3rem 0 clamp(6rem, 14vw, 10rem);
+  }
   .release-card {
     text-decoration: none;
     color: inherit;
@@ -306,7 +309,7 @@
   }
 </style>
 
-<div class="{{ if $isMain }}{{ else }}music-release-shell{{ end }}" style="{{ if not $isMain }}padding:3rem 0 0;{{ end }}">
+<div class="{{ if not $isMain }}music-release-shell {{ end }}music-page-pad">
   <div class="{{ if not $isMain }}music-release-inner{{ end }}" style="max-width:{{ if $isMain }}1100px{{ else }}900px{{ end }};margin:0 auto;">
 
     {{ if $isMain }}

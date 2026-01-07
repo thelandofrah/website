@@ -99,6 +99,12 @@
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
       }
+      @media (max-width: 720px) {
+        .fob-hero-strip { min-height: 320px; }
+        .fob-hero-strip__content { padding: 1.5rem 1.25rem 2rem; }
+        .fob-hero-strip__text { padding: 1rem 1.5rem; }
+        .fob-hero-strip__description { font-size: 1.05rem; line-height: 1.6; }
+      }
     </style>
     <header class="fob-hero-strip">
       <div class="fob-hero-strip__slides">
@@ -187,8 +193,17 @@
     0% { transform: translateY(-6px) rotate(-1deg) scale(1.02); }
     100% { transform: translateY(-11px) rotate(1deg) scale(1.05); }
   }
+  .gallery-page-shell {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    padding-top: clamp(2rem, 6vw, 3.5rem);
+  }
+  @media (max-width: 720px) {
+    .gallery-grid { gap: 1.75rem 1rem; padding: 0 1rem; }
+    .gallery-card__inner img { max-height: 240px; }
+    .gallery-page-shell { padding: 1.25rem 1rem 2.5rem; }
+  }
 </style>
-  <main class="mw8 center ph4 pv5" style="padding-top:5cm;padding-left:3cm;padding-right:3cm;">
+  <main class="mw8 center ph4 pv5 gallery-page-shell">
 
     <!-- Artwork Grid -->
     <div class="gallery-grid">

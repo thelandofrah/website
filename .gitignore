@@ -13,3 +13,9 @@ resources/
 
 # allow optimized web images
 !**/*.webp
+
+# block big-ish assets from being committed by accident
+**/*.pdf
+
+# allow site images
+!static/images/**

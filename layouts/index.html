@@ -58,7 +58,20 @@
     pointer-events: none;
   }
   @media (max-width: 640px) {
-    .home-logo-wrap { max-width: min(1260px, 86vw); }
+    body.map-surface { background-size: 170% auto; }
+    .home-shell {
+      margin-top: -3rem;
+      padding: 1.5rem 1rem 2.5rem;
+      min-height: 70vh;
+    }
+    .home-logo-wrap {
+      max-width: min(1260px, 88vw);
+      aspect-ratio: 5 / 6;
+    }
+    .home-logo-wrap::before {
+      inset: 28% 8%;
+      filter: blur(35px);
+    }
   }
 </style>
 

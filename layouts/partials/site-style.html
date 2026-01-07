@@ -8,29 +8,74 @@
   main { box-sizing: border-box; }
   a { color: inherit; }
   img { max-width: 100%; height: auto; display: block; }
-  header {
+  .site-header {
     background: #000;
     color: #fff;
+    padding: 1rem 2rem;
     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   }
-  nav ul {
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.75rem;
+    width: 100%;
+  }
+  .site-nav__home {
+    font-size: 1.7rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: #fff;
+  }
+  .site-nav__links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .site-nav__menu {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 1rem;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
-  nav li { margin: 0; padding: 0; }
-  nav a {
+  .site-nav__item { margin: 0; padding: 0; }
+  .site-nav__link {
     color: #fff;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 800;
+    font-size: 1.05rem;
     display: inline-flex;
     align-items: center;
     padding: 0.15rem 0.25rem;
   }
-  nav a:hover,
-  nav a:focus { text-decoration: underline; }
+  .site-nav__link:hover,
+  .site-nav__link:focus { text-decoration: underline; }
+  @media (max-width: 720px) {
+    .site-header { padding: 0.85rem 1.1rem; }
+    .site-nav {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .site-nav__links {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .site-nav__menu {
+      width: 100%;
+      gap: 0.35rem;
+      row-gap: 0.2rem;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .site-nav__link {
+      font-size: 1rem;
+      padding: 0.35rem 0;
+    }
+  }
 </style>

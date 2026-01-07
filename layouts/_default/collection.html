@@ -80,6 +80,10 @@
     gap: 1.25rem;
     margin: 0;
   }
+  @media (max-width: 720px) {
+    .collection-shell { padding-bottom: clamp(5rem, 18vw, 8rem); }
+    .collection-grid { gap: 2.5rem 1.5rem; }
+  }
   .collection-card {
     text-decoration:none;
     color:inherit;
@@ -119,17 +123,17 @@
   }
   {{ if $isMap }}
   .collection-card__inner.map-card__inner {
-    background: rgba(252,241,220,0.96);
-    border: 1px solid rgba(140,113,64,0.22);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    padding: 1.75rem;
+    background: rgba(253,244,230,0.92);
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    padding: 0.85rem;
   }
   .map-card__image {
     position: relative;
     border-radius: 14px;
     overflow: hidden;
     aspect-ratio: 4 / 3;
-    background: linear-gradient(180deg, rgba(253,244,230,0.95), rgba(242,222,170,0.85));
+    background: transparent;
     margin-bottom: 1.1rem;
   }
   .map-card__image img {
@@ -139,17 +143,20 @@
     mix-blend-mode: multiply;
     transform: scale(1.02);
   }
-  .map-card__tag {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(0,0,0,0.7);
-    color: #fdf4e6;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+  .map-card__image--rotate {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-card__image--rotate img {
+    width: auto;
+    max-width: 92%;
+    height: auto;
+    max-height: 92%;
+    transform: rotate(90deg);
+    transform-origin: center;
+    mix-blend-mode: normal;
   }
   .map-card__body {
     display: flex;
@@ -190,12 +197,13 @@
     <div class="collection-grid">
       {{ range $items }}
         {{ $item := . }}
+        {{ $slug := $item.File.BaseFileName }}
+        {{ $rotatePreview := and $isMap (eq $slug "second-age") }}
         <a href="{{ $item.RelPermalink }}" class="collection-card">
           <div class="collection-card__inner{{ if $isMap }} map-card__inner{{ end }}">
             {{ if $isMap }}
               {{ with or $item.Params.featured_image $item.Params.featureImage $item.Params.cover }}
-                <div class="map-card__image">
-                  <span class="map-card__tag">Map</span>
+                <div class="map-card__image {{ if $rotatePreview }}map-card__image--rotate{{ end }}">
                   <img src="{{ . }}" alt="{{ $item.Title }} map preview">
                 </div>
               {{ end }}

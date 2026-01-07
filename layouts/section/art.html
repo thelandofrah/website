@@ -110,6 +110,10 @@
     box-shadow: 0 20px 30px rgba(0,0,0,0.15);
     filter: brightness(1.02) saturate(1.03);
   }
+  @media (max-width: 720px) {
+    .art-page-shell { padding-bottom: clamp(4.5rem, 15vw, 7rem); }
+    .art-grid { gap: 2.4rem 1.4rem; }
+  }
   @keyframes artCardWiggle {
     0% { transform: translateY(-4px) rotate(-0.8deg) scale(1.01); }
     100% { transform: translateY(-7px) rotate(0.8deg) scale(1.02); }

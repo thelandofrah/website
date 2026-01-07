@@ -2,7 +2,7 @@
 title: "Asleep in a Field of Blue"
 cover: "/images/art/albumcovers/fobalbumcover.jpeg"
 featureImage: "/images/art/albumcovers/fobalbumcover.jpeg"
-snippet: "Lying in the grass while the sky hums back at you."
+snippet: "Breakup album recorded live with a 6-piece band"
 weight: 15
 date: 2025-01-01
 category: "album"

@@ -4,6 +4,8 @@
 {{ define "main" }}
 {{ $img := or .Params.featured_image .Params.featureImage .Params.cover }}
 {{ $bg := or $img "/images/art/map/finalmap.png" }}
+{{ $slug := .File.BaseFileName }}
+{{ $rotateSecond := eq $slug "second-age" }}
 <style>
   body.map-surface {
     --map-tile: calc(100vw * 1.32);
@@ -68,6 +70,32 @@
     display: block;
     mix-blend-mode: multiply;
   }
+  {{ if $rotateSecond }}
+  .map-hero-image--rotate {
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(253,244,230,0.92);
+    padding: 1rem;
+  }
+  .map-hero-image--rotate img {
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    transform: rotate(90deg);
+    transform-origin: center;
+    mix-blend-mode: normal;
+    display: block;
+  }
+  @media (max-width: 720px) {
+    .map-hero-image--rotate img {
+      max-width: none;
+      max-height: none;
+    }
+  }
+  {{ end }}
   .map-content {
     font-size: 1.1rem;
     line-height: 1.8;
@@ -81,7 +109,7 @@
       <p class="map-hero-description">{{ . }}</p>
     {{ end }}
     {{ if $img }}
-      <div class="map-hero-image">
+      <div class="map-hero-image {{ if $rotateSecond }}map-hero-image--rotate{{ end }}">
         <img src="{{ $img }}" alt="{{ .Title }} map">
       </div>
     {{ end }}
