@@ -83,7 +83,7 @@
     transform: translateY(-3px);
     box-shadow: 0 20px 35px rgba(0,0,0,0.3);
   }
-.comic-page-grid {
+  .comic-page-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
     gap: 0.5rem;
@@ -110,6 +110,20 @@
     background: rgba(0,0,0,0.9);
     outline: none;
   }
+  @media (max-width: 640px) {
+    .comic-page-grid {
+      width: 100%;
+      max-width: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(36px, 1fr));
+      gap: 0.6rem;
+      padding: 0.9rem;
+      box-sizing: border-box;
+    }
+    .comic-page-grid button {
+      padding: 0.3rem;
+      font-size: 0.8rem;
+    }
+  }
   .comic-reader-shell {
     position: relative;
     z-index: 1;
@@ -132,7 +146,8 @@
     padding: 1.75rem clamp(1.5rem, 4vw, 3rem);
     box-shadow: 0 20px 45px rgba(0,0,0,0.15);
     text-align: center;
-    width: min(900px, 92vw);
+    width: 100%;
+    max-width: 900px;
   }
   .comic-hero-card h1 {
     font-size: clamp(3rem, 8vw, 4.8rem);
@@ -316,6 +331,15 @@
     background: rgba(255,255,255,0.7);
   }
   @media (max-width: 50em) {
+    .comic-reader-shell {
+      padding-left: 1.4rem;
+      padding-right: 1.4rem;
+    }
+    .comic-hero-card {
+      width: 100%;
+      max-width: none;
+      box-sizing: border-box;
+    }
     .comic-page-wrap {
       width: min(900px, 100%);
     }

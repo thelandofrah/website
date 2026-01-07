@@ -5,6 +5,11 @@
 {{ define "main" }}
 {{ $galleryDir := .Params.gallery_dir | default (printf "images/events/%s" .File.TranslationBaseName) }}
 {{ $images := slice }}
+{{ $rotateMap := dict
+  "rave1" (slice "img_3102.jpeg" "img_3103.jpeg" "img_3104.jpeg" "img_3105.jpeg" "img_3106.jpeg" "img_3107.jpeg" "img_3108.jpeg" "img_3109.jpeg" "img_3422.jpeg" "img_3424.jpeg" "img_3425.jpeg" "img_8586.jpg" "img_8587.jpg" "img_8588.jpg" "img_8589.jpg" "img_8590.jpg" "img_8591.jpg" "img_8592.jpg" "img_8593.jpg" "img_8594.jpg" "img_8595.jpg" "img_8596.jpg" "img_8597.jpg" "img_8598.jpg" "img_8603.jpeg" "img_8604.jpeg")
+  "asleepinblue" (slice "img_1430.jpeg" "img_1432.jpeg" "img_1434.jpeg" "img_1435.jpeg" "img_1436.jpeg" "img_3492.jpeg" "img_3494.jpeg" "img_3502.jpeg" "img_3503.jpeg" "img_3504.jpeg" "img_3519.jpeg" "img_3520.jpeg" "img_3527.jpg" "img_3528.jpg" "img_3529.jpg" "img_3530.jpg" "img_3531.jpg" "img_3532.jpg" "img_3533.jpg" "img_3534.jpg" "img_3535.jpg")
+}}
+{{ $eventKey := .File.TranslationBaseName }}
 {{ if $galleryDir }}
   {{ $readPath := printf "static/%s" $galleryDir }}
   {{ if fileExists $readPath }}
@@ -107,6 +112,12 @@
     object-fit: contain;
     background: #05060b;
   }
+  .event-frame img.rotate-90 {
+    transform: rotate(90deg);
+    transform-origin: center;
+    max-width: min(80vh, 100vw);
+    max-height: 65vh;
+  }
   .event-gallery__controls {
     display: flex;
     align-items: center;
@@ -121,6 +132,12 @@
     padding: 0.5rem 0.9rem;
     background: rgba(0,0,0,0.08);
     border-radius: 999px;
+    max-width: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
   }
   .event-gallery__button {
     border: none;
@@ -150,6 +167,32 @@
     color: rgba(0,0,0,0.6);
     font-size: 0.95rem;
   }
+  .event-gallery__grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .event-gallery__grid button {
+    border: none;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 0.35rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .event-gallery__grid button:hover,
+  .event-gallery__grid button:focus {
+    transform: translateY(-2px);
+    background: rgba(0,0,0,0.9);
+    outline: none;
+  }
+  .event-gallery__grid button.is-active {
+    background: #000;
+  }
   @media (max-width: 640px) {
     .event-gallery__controls {
       flex-direction: column;
@@ -170,6 +213,16 @@
     .event-frame img {
       max-height: 64vh;
     }
+    .event-gallery__progress {
+      align-self: stretch;
+      margin-top: 0.3rem;
+      width: 100%;
+    }
+    .event-gallery__grid {
+      grid-template-columns: repeat(auto-fit, minmax(36px, 1fr));
+      gap: 0.6rem;
+    }
+    .event-gallery__grid button { font-size: 0.8rem; padding: 0.3rem; }
   }
 </style>
 
@@ -185,8 +238,17 @@
     <div class="event-gallery" data-gallery>
       <div class="event-gallery__viewport">
         {{ range $index, $img := $images }}
+          {{ $imgClass := "" }}
+          {{ $base := lower (path.Base $img) }}
+          {{ $needsRotate := false }}
+          {{ with index $rotateMap $eventKey }}
+            {{ if in . $base }}{{ $needsRotate = true }}{{ end }}
+          {{ end }}
+          {{ if $needsRotate }}
+            {{ $imgClass = "rotate-90" }}
+          {{ end }}
           <figure class="event-frame{{ if eq $index 0 }} is-active{{ end }}" data-frame data-index="{{ $index }}">
-            <img src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
+            <img class="{{ $imgClass }}" {{ if $needsRotate }}data-force-rotate="90"{{ end }} src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
           </figure>
         {{ end }}
       </div>
@@ -195,6 +257,11 @@
         <div class="event-gallery__progress"><span data-current>1</span> / {{ len $images }}</div>
         <button class="event-gallery__button" type="button" data-next>Next &rarr;</button>
         <p class="event-gallery__hint">Click image or use arrow keys to move through the set.</p>
+      </div>
+      <div class="event-gallery__grid" data-photo-grid>
+        {{ range $index, $_ := $images }}
+          <button type="button" data-photo-go="{{ $index }}">{{ add $index 1 }}</button>
+        {{ end }}
       </div>
     </div>
   {{ else }}
@@ -208,14 +275,18 @@
   if (!gallery) return;
   const frames = Array.from(gallery.querySelectorAll("[data-frame]"));
   const currentEl = gallery.querySelector("[data-current]");
+  const pageButtons = Array.from(gallery.querySelectorAll("[data-photo-go]"));
   const total = frames.length;
   if (!total) return;
+  const images = frames.map((f) => f.querySelector("img")).filter(Boolean);
   let current = 0;
 
   const activate = (next) => {
     frames[current].classList.remove("is-active");
+    pageButtons[current]?.classList.remove("is-active");
     current = (next % total + total) % total;
     frames[current].classList.add("is-active");
+    pageButtons[current]?.classList.add("is-active");
     if (currentEl) currentEl.textContent = current + 1;
   };
 
@@ -228,6 +299,69 @@
   frames.forEach((frame) => {
     frame.addEventListener("click", () => activate(current + 1));
   });
+  pageButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.photoGo);
+      if (!Number.isNaN(idx)) activate(idx);
+    });
+  });
+  pageButtons[0]?.classList.add("is-active");
+
+  // EXIF orientation fix for portrait shots (common with iPhone photos)
+  function parseOrientation(buffer) {
+    const view = new DataView(buffer);
+    if (view.getUint16(0, false) !== 0xFFD8) return 1;
+    let offset = 2;
+    const length = view.byteLength;
+    while (offset < length) {
+      const marker = view.getUint16(offset, false);
+      offset += 2;
+      if (marker === 0xFFE1) {
+        offset += 2; // skip length
+        if (view.getUint32(offset, false) !== 0x45786966) return 1; // "Exif"
+        offset += 6;
+        const little = view.getUint16(offset, false) === 0x4949;
+        offset += view.getUint32(offset + 4, little);
+        const tags = view.getUint16(offset, little);
+        offset += 2;
+        for (let i = 0; i < tags; i++) {
+          const tagOffset = offset + i * 12;
+          if (view.getUint16(tagOffset, little) === 0x0112) {
+            return view.getUint16(tagOffset + 8, little);
+          }
+        }
+      } else if ((marker & 0xFF00) !== 0xFF00) {
+        break;
+      } else {
+        offset += view.getUint16(offset, false);
+      }
+    }
+    return 1;
+  }
+
+  function applyOrientation(img, orientation) {
+    img.classList.remove("rotate-90", "rotate-180", "rotate-270");
+    if (orientation === 6) img.classList.add("rotate-90");
+    else if (orientation === 8) img.classList.add("rotate-270");
+    else if (orientation === 3) img.classList.add("rotate-180");
+  }
+
+  function orientImage(img) {
+    const forced = img.dataset.forceRotate;
+    if (forced) {
+      img.classList.remove("rotate-90");
+      if (forced === "90") img.classList.add("rotate-90");
+      return;
+    }
+    const src = img.getAttribute("src");
+    if (!src) return;
+    fetch(src)
+      .then((res) => res.arrayBuffer())
+      .then((buf) => applyOrientation(img, parseOrientation(buf)))
+      .catch(() => {});
+  }
+
+  images.forEach((img) => orientImage(img));
 })();
 </script>
 {{ end }}

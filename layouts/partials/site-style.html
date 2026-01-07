@@ -7,7 +7,7 @@
   }
   main { box-sizing: border-box; }
   a { color: inherit; }
-  img { max-width: 100%; height: auto; display: block; }
+  img { max-width: 100%; height: auto; display: block; image-orientation: from-image; }
   .site-header {
     background: #000;
     color: #fff;
@@ -20,6 +20,18 @@
     justify-content: space-between;
     gap: 1.75rem;
     width: 100%;
+  }
+  .site-nav__toggle {
+    display: none;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    padding: 0.4rem 0.7rem;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.4rem;
   }
   .site-nav__home {
     font-size: 1.7rem;
@@ -62,10 +74,15 @@
       align-items: flex-start;
       gap: 0.5rem;
     }
+    .site-nav__toggle {
+      display: inline-flex;
+    }
     .site-nav__links {
       width: 100%;
       justify-content: flex-start;
+      display: none;
     }
+    .site-nav.is-open .site-nav__links { display: block; }
     .site-nav__menu {
       width: 100%;
       gap: 0.35rem;

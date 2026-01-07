@@ -1,0 +1,106 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
+{{ define "footer" }}{{ partials.Include "site-footer.html" . }}{{ end }}
+
+{{ define "main" }}
+{{ $youtubeID := .Params.youtube_id | compare.Default "" }}
+{{ $thumb := or .Params.featured_image (printf "https://img.youtube.com/vi/%s/hqdefault.jpg" $youtubeID) }}
+<style>
+  body.music-spectrum {
+    --map-tile: calc(100vw * 1.415);
+    background-color: #f2deaa;
+    background-image: linear-gradient(rgba(242,222,170,0.5), rgba(242,222,170,0.5)), url('/images/art/map/finalmap.png');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 100% auto;
+  }
+  body.music-spectrum::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(242,222,170,0.45) 0%,
+      rgba(242,222,170,0.25) 2%,
+      rgba(242,222,170,0.08) 6%,
+      rgba(242,222,170,0) 12%,
+      rgba(242,222,170,0) 88%,
+      rgba(242,222,170,0.08) 94%,
+      rgba(242,222,170,0.25) 98%,
+      rgba(242,222,170,0.45) 100%);
+    background-size: 100% var(--map-tile);
+    background-repeat: repeat-y;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    filter: blur(35px);
+  }
+  .video-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) clamp(6rem, 12vw, 10rem);
+  }
+  .video-card {
+    background: rgba(253,244,230,0.92);
+    border-radius: 24px;
+    padding: 1.75rem clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+  }
+  .video-title {
+    margin: 0 0 1rem;
+    font-size: clamp(2.6rem, 7vw, 4.2rem);
+  }
+  .video-description {
+    margin: 0 0 1.25rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(0,0,0,0.75);
+  }
+  .video-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 18px 38px rgba(0,0,0,0.2);
+    background: #000;
+  }
+  .video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (max-width: 720px) {
+    .video-page { padding-left: 1.1rem; padding-right: 1.1rem; }
+  }
+</style>
+
+<div class="video-page">
+  <div class="video-card">
+    <h1 class="video-title">{{ .Title }}</h1>
+    {{ with .Params.description }}
+      <p class="video-description">{{ . }}</p>
+    {{ end }}
+    <div class="video-embed">
+      {{ if $youtubeID }}
+        <iframe src="https://www.youtube.com/embed/{{ $youtubeID }}" allowfullscreen></iframe>
+      {{ else }}
+        <img src="{{ $thumb }}" alt="{{ .Title }}" class="video-thumb">
+      {{ end }}
+    </div>
+    {{ with .Content }}
+      <div class="video-description" style="margin-top:1.25rem;">
+        {{ . }}
+      </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

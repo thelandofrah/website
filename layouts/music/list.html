@@ -142,28 +142,33 @@
   }
   {{ end }}
   body.music-spectrum {
-    background: linear-gradient(130deg,
-      rgba(242,230,255,0.96),
-      rgba(226,205,255,0.96),
-      rgba(210,185,255,0.96),
-      rgba(192,165,247,0.96),
-      rgba(174,150,238,0.96),
-      rgba(176,200,255,0.94),
-      rgba(156,210,255,0.94),
-      rgba(168,235,255,0.92),
-      rgba(255,230,210,0.88),
-      rgba(255,247,185,0.88),
-      rgba(255,205,190,0.88),
-      rgba(214,190,255,0.95),
-      rgba(196,168,245,0.95),
-      rgba(180,152,240,0.95));
-    background-size: 600% 600%;
-    animation: bodySpectrum 45s linear infinite;
+    --map-tile: calc(100vw * 1.415);
+    background-color: #f2deaa;
+    background-image: linear-gradient(rgba(242,222,170,0.5), rgba(242,222,170,0.5)), url('/images/art/map/finalmap.png');
+    background-repeat: repeat-y;
+    background-position: center top;
+    background-size: 100% auto;
   }
-  @keyframes bodySpectrum {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  body.music-spectrum::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(242,222,170,0.45) 0%,
+      rgba(242,222,170,0.25) 2%,
+      rgba(242,222,170,0.08) 6%,
+      rgba(242,222,170,0) 12%,
+      rgba(242,222,170,0) 88%,
+      rgba(242,222,170,0.08) 94%,
+      rgba(242,222,170,0.25) 98%,
+      rgba(242,222,170,0.45) 100%);
+    background-size: 100% var(--map-tile);
+    background-repeat: repeat-y;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+    filter: blur(35px);
   }
   .music-release-grid {
     display: grid;
@@ -172,6 +177,12 @@
   }
   .music-page-pad {
     padding: 3rem 0 clamp(6rem, 14vw, 10rem);
+  }
+  @media (max-width: 720px) {
+    .music-page-pad {
+      padding-left: 1.1rem;
+      padding-right: 1.1rem;
+    }
   }
   .release-card {
     text-decoration: none;
@@ -204,9 +215,14 @@
     max-width: 800px;
     margin: 0 auto 2.5rem;
     text-align: center;
-    padding: 2rem 1.5rem;
     animation: musicHeroDrop 0.9s ease-out forwards;
     transform-origin: center top;
+  }
+  .music-main-card {
+    background: rgba(253,244,230,0.92);
+    border-radius: 24px;
+    padding: 1.75rem clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
   }
   .music-main-title {
     font-size: clamp(3rem, 8vw, 4.8rem);
@@ -218,6 +234,14 @@
   }
   .music-main-body p {
     margin: 0.75rem 0;
+  }
+  .music-section-card {
+    display: inline-block;
+    background: rgba(253,244,230,0.92);
+    border-radius: 20px;
+    padding: 0.9rem 1.5rem;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.14);
+    margin: 2rem 0 1.5rem;
   }
   @keyframes musicHeroDrop {
     0% { transform: translateY(-90px); opacity: 0; }
@@ -314,12 +338,14 @@
 
     {{ if $isMain }}
       <div class="music-main-hero">
-        <h1 class="music-main-title">{{ .Title }}</h1>
-        {{ with .Content }}
-          <div class="music-main-body">
-            {{ . }}
-          </div>
-        {{ end }}
+        <div class="music-main-card">
+          <h1 class="music-main-title">{{ .Title }}</h1>
+          {{ with .Content }}
+            <div class="music-main-body">
+              {{ . }}
+            </div>
+          {{ end }}
+        </div>
       </div>
     {{ else }}
       {{ with .Content }}
@@ -331,7 +357,9 @@
 
   {{ if $isMain }}
   <!-- ALBUMS + LIVE SETS -->
-  <h2 style="margin-top:2rem;">Albums & Live Sets</h2>
+  <div class="music-section-card">
+    <h2 style="margin:0;">Albums & Live Sets</h2>
+  </div>
 
   <div class="album-grid music-release-grid" style="margin-bottom:3rem;">
 
@@ -369,7 +397,9 @@
 
 
   <!-- SINGLES -->
-  <h2 style="margin-top:2rem;">Singles / EPs</h2>
+  <div class="music-section-card">
+    <h2 style="margin:0;">Singles / EPs</h2>
+  </div>
 
   <div class="album-grid music-release-grid">
 

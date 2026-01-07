@@ -1,0 +1,80 @@
+{{ define "body-extra-class" }}music-spectrum{{ end }}
+{{ define "header" }}{{ partials.Include "site-header.html" . }}{{ end }}
+{{ define "footer" }}{{ partials.Include "site-footer.html" . }}{{ end }}
+
+{{ define "main" }}
+{{ $items := .Pages }}
+<style>
+  body.music-spectrum {
+    background: linear-gradient(130deg,
+      rgba(242,230,255,0.96),
+      rgba(226,205,255,0.96),
+      rgba(210,185,255,0.96),
+      rgba(192,165,247,0.96),
+      rgba(174,150,238,0.96),
+      rgba(176,200,255,0.94),
+      rgba(156,210,255,0.94),
+      rgba(168,235,255,0.92),
+      rgba(255,230,210,0.88),
+      rgba(255,247,185,0.88),
+      rgba(255,205,190,0.88),
+      rgba(214,190,255,0.95),
+      rgba(196,168,245,0.95),
+      rgba(180,152,240,0.95));
+    background-size: 600% 600%;
+    animation: bodySpectrum 45s linear infinite;
+  }
+  @keyframes bodySpectrum {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .upcoming-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) clamp(6rem, 12vw, 10rem);
+    min-height: calc(100vh - 220px);
+  }
+  .upcoming-hero {
+    max-width: 900px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+  }
+  .upcoming-card {
+    background: rgba(253,244,230,0.92);
+    border-radius: 24px;
+    padding: 1.75rem clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+  }
+  .upcoming-title {
+    margin: 0 0 1rem;
+    font-size: clamp(2.8rem, 7vw, 4.6rem);
+  }
+  .upcoming-body {
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(0,0,0,0.75);
+  }
+  .upcoming-empty {
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  @media (max-width: 720px) {
+    .upcoming-shell { padding-left: 1.1rem; padding-right: 1.1rem; }
+  }
+</style>
+
+<div class="upcoming-shell">
+  <div class="upcoming-hero">
+    <div class="upcoming-card">
+      <h1 class="upcoming-title">{{ .Title }}</h1>
+      {{ with .Params.description }}<p class="upcoming-body">{{ . }}</p>{{ end }}
+      {{ if not (gt (len $items) 0) }}
+        <p class="upcoming-empty">Nothing right now, come back soon!</p>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

@@ -1,6 +1,6 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://thelandofrah.com/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'The Land of Rah'
 
 [params]
   cover_dimming_class = "bg-transparent"
@@ -27,21 +27,36 @@ title = 'My New Hugo Site'
     weight = 3
 
   [[menu.main]]
+    name = "Videos"
+    url = "/videos/"
+    weight = 4
+
+  [[menu.main]]
     name = "Maps"
     url = "/maps/"
-    weight = 4
+    weight = 5
+
+  [[menu.main]]
+    name = "Upcoming Events"
+    url = "/upcoming-events/"
+    weight = 6
 
   [[menu.main]]
     name = "Merch"
     url = "/merch/"
-    weight = 5
+    weight = 7
+
+  [[menu.main]]
+    name = "Mailing List"
+    url = "/mailing-list/"
+    weight = 9
 
   [[menu.main]]
     name = "Past Events / Photos"
     url = "/events/"
-    weight = 6
+    weight = 8
 
   [[menu.main]]
-    name = "Community Board"
-    url = "/community/"
-    weight = 7
+    name = "Upcoming Events"
+    url = "/upcoming-events/"
+    weight = 5.5
