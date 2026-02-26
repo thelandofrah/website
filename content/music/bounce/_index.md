@@ -10,7 +10,7 @@ category: "single"
 
 ## About this release
 
-Breaks, idm, idk. Was a dream come true to release on lovejoy. Reflex Blue stiffed us on his remix a bit tbh. 
+Breaks, idm, idk. Was a dream come true to release on lovejoy.
 
 <iframe style="border: 0; width: 350px; height: 654px;" src="https://bandcamp.com/EmbeddedPlayer/album=3383349693/size=large/bgcol=ffffff/linkcol=e99708/transparent=true/" seamless><a href="https://lovejoyrecords.bandcamp.com/album/bounce">Bounce by The Land of Rah</a></iframe>
 

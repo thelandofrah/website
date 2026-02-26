@@ -3,37 +3,69 @@
 {{ define "footer" }}{{ partials.Include "site-footer.html" . }}{{ end }}
 
 {{ define "main" }}
-{{ $items := .Pages }}
 <style>
   body.music-spectrum {
-    background: linear-gradient(130deg,
-      rgba(242,230,255,0.96),
-      rgba(226,205,255,0.96),
-      rgba(210,185,255,0.96),
-      rgba(192,165,247,0.96),
-      rgba(174,150,238,0.96),
-      rgba(176,200,255,0.94),
-      rgba(156,210,255,0.94),
-      rgba(168,235,255,0.92),
-      rgba(255,230,210,0.88),
-      rgba(255,247,185,0.88),
-      rgba(255,205,190,0.88),
-      rgba(214,190,255,0.95),
-      rgba(196,168,245,0.95),
-      rgba(180,152,240,0.95));
-    background-size: 600% 600%;
-    animation: bodySpectrum 45s linear infinite;
+    background: #000;
   }
-  @keyframes bodySpectrum {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  .upcoming-stage {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 220px);
+  }
+  .upcoming-clouds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+  }
+  .upcoming-cloud {
+    position: absolute;
+    top: -8vh;
+    width: min(70vw, 900px);
+    height: auto;
+    opacity: 0.75;
+    filter: blur(0.3px);
+    animation: cloudDrift 36s ease-in-out infinite;
+  }
+  .upcoming-cloud--left {
+    left: -10vw;
+    transform-origin: center left;
+  }
+  .upcoming-cloud--right {
+    right: -10vw;
+    transform-origin: center right;
+  }
+  .upcoming-cloud--layer-1 { top: -6vh; animation-duration: 42s; opacity: 0.75; }
+  .upcoming-cloud--layer-2 { top: 8vh; animation-duration: 36s; opacity: 0.68; }
+  .upcoming-cloud--layer-3 { top: 24vh; animation-duration: 40s; opacity: 0.62; }
+  .upcoming-cloud--layer-4 { top: 48vh; animation-duration: 44s; opacity: 0.62; }
+  .upcoming-cloud--layer-5 { top: 62vh; animation-duration: 38s; opacity: 0.68; }
+  .upcoming-cloud--mobile-only {
+    display: none;
+  }
+  .upcoming-cloud--bottom {
+    opacity: 0.78;
+  }
+  @keyframes cloudDrift {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(7vw) scale(1.02); }
+    100% { transform: translateX(0) scale(1); }
   }
   .upcoming-shell {
     max-width: 1100px;
     margin: 0 auto;
     padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) clamp(6rem, 12vw, 10rem);
     min-height: calc(100vh - 220px);
+    position: relative;
+  }
+  .upcoming-content {
+    position: relative;
+    z-index: 2;
   }
   .upcoming-hero {
     max-width: 900px;
@@ -56,24 +88,166 @@
     line-height: 1.8;
     color: rgba(0,0,0,0.75);
   }
-  .upcoming-empty {
-    margin-top: 1.5rem;
-    font-size: 1.2rem;
-    font-weight: 700;
+  .upcoming-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(460px, 640px));
+    gap: 2.5rem;
+    justify-content: center;
+  }
+  .upcoming-event-card {
+    text-decoration: none;
+    color: inherit;
+  }
+  .upcoming-event-card__inner {
+    background: rgba(253,244,230,0.92);
+    border-radius: 18px;
+    padding: 1.4rem;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+    animation: upcomingFloat 6s ease-in-out infinite;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .upcoming-event-card__inner img {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+  }
+  .upcoming-event-card__meta {
+    padding: 0.9rem 0.5rem 0.35rem;
+  }
+  .upcoming-event-card__meta h2 {
+    margin: 0 0 0.4rem;
+    font-size: 1.7rem;
+  }
+  .upcoming-event-card__meta p {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    font-size: 1.05rem;
+  }
+  .upcoming-event-card:hover .upcoming-event-card__inner,
+  .upcoming-event-card:focus .upcoming-event-card__inner {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 26px 50px rgba(0,0,0,0.22);
+  }
+  @keyframes upcomingFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .upcoming-event-card__inner {
+      animation: none;
+    }
+    .upcoming-cloud {
+      animation: none;
+    }
   }
   @media (max-width: 720px) {
     .upcoming-shell { padding-left: 1.1rem; padding-right: 1.1rem; }
+    .upcoming-grid {
+      grid-template-columns: minmax(240px, 100%);
+      gap: 1.5rem;
+    }
+    .upcoming-event-card__inner {
+      padding: 1rem;
+    }
+    .upcoming-event-card__meta {
+      padding: 0.8rem 0.4rem 0.3rem;
+    }
+    .upcoming-event-card__meta h2 {
+      font-size: 1.4rem;
+    }
+    .upcoming-event-card__meta p {
+      font-size: 1rem;
+    }
+    .upcoming-cloud {
+      width: 130vw;
+      opacity: 0.85;
+    }
+    .upcoming-stage {
+      min-height: calc(100vh + 420px);
+    }
+    .upcoming-clouds {
+      height: 100%;
+    }
+    @keyframes cloudDrift {
+      0% { transform: translateX(0) scale(1); }
+      50% { transform: translateX(12vw) scale(1.03); }
+      100% { transform: translateX(0) scale(1); }
+    }
+    .upcoming-cloud--layer-2 { top: 16vh; opacity: 0.85; }
+    .upcoming-cloud--layer-3 { top: 30vh; opacity: 0.8; }
+    .upcoming-cloud--layer-4 { top: 52vh; opacity: 0.75; }
+    .upcoming-cloud--layer-5 { top: 70vh; opacity: 0.72; }
+    .upcoming-cloud--mobile-only {
+      display: block;
+    }
+    .upcoming-cloud--layer-6 { top: 84vh; opacity: 0.8; }
+    .upcoming-cloud--layer-7 { top: 98vh; opacity: 0.78; }
+    .upcoming-cloud--layer-8 { top: 112vh; opacity: 0.76; }
+    .upcoming-cloud--layer-9 { top: 126vh; opacity: 0.74; }
+    .upcoming-cloud--layer-10 { top: 140vh; opacity: 0.72; }
+    .upcoming-cloud--layer-11 { top: 24vh; opacity: 0.85; }
+    .upcoming-cloud--layer-12 { top: 150vh; opacity: 0.7; }
+    .upcoming-cloud--layer-13 { top: 162vh; opacity: 0.68; }
+    .upcoming-cloud--layer-14 { top: 172vh; opacity: 0.66; }
+    .upcoming-cloud--layer-15 { top: 184vh; opacity: 0.64; }
+    .upcoming-cloud--layer-6,
+    .upcoming-cloud--layer-8,
+    .upcoming-cloud--layer-10,
+    .upcoming-cloud--layer-12,
+    .upcoming-cloud--layer-14 {
+      animation-duration: 46s;
+      animation-delay: -6s;
+    }
+    .upcoming-cloud--layer-7,
+    .upcoming-cloud--layer-9,
+    .upcoming-cloud--layer-11,
+    .upcoming-cloud--layer-13,
+    .upcoming-cloud--layer-15 {
+      animation-duration: 34s;
+      animation-delay: -12s;
+    }
   }
 </style>
 
-<div class="upcoming-shell">
-  <div class="upcoming-hero">
-    <div class="upcoming-card hero-drop">
-      <h1 class="upcoming-title">{{ .Title }}</h1>
-      {{ with .Params.description }}<p class="upcoming-body">{{ . }}</p>{{ end }}
-      {{ if not (gt (len $items) 0) }}
-        <p class="upcoming-empty">Nothing right now, come back soon!</p>
-      {{ end }}
+<div class="upcoming-stage">
+  <div class="upcoming-clouds" aria-hidden="true">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-2" src="/images/events/posters/100.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-1" src="/images/events/posters/52.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-4" src="/images/events/posters/38.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-3" src="/images/events/posters/38.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-5" src="/images/events/posters/43.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-7 upcoming-cloud--mobile-only" src="/images/events/posters/52.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-6 upcoming-cloud--mobile-only" src="/images/events/posters/43.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-11 upcoming-cloud--mobile-only" src="/images/events/posters/100.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-8 upcoming-cloud--mobile-only" src="/images/events/posters/38.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-9 upcoming-cloud--mobile-only" src="/images/events/posters/100.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-10 upcoming-cloud--mobile-only upcoming-cloud--bottom" src="/images/events/posters/52.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-12 upcoming-cloud--mobile-only upcoming-cloud--bottom" src="/images/events/posters/43.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-13 upcoming-cloud--mobile-only upcoming-cloud--bottom" src="/images/events/posters/100.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--left upcoming-cloud--layer-14 upcoming-cloud--mobile-only upcoming-cloud--bottom" src="/images/events/posters/43.webp" alt="">
+    <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-15 upcoming-cloud--mobile-only upcoming-cloud--bottom" src="/images/events/posters/52.webp" alt="">
+  </div>
+  <div class="upcoming-content">
+    <div class="upcoming-shell">
+      <div class="upcoming-hero">
+        <div class="upcoming-card hero-drop">
+          <h1 class="upcoming-title">{{ .Title }}</h1>
+          {{ with .Params.description }}<p class="upcoming-body">{{ . }}</p>{{ end }}
+        </div>
+      </div>
+      <div class="upcoming-grid">
+        <a class="upcoming-event-card" href="https://events.humanitix.com/land-of-rah-children-of-the-mist" target="_blank" rel="noopener">
+          <div class="upcoming-event-card__inner">
+            <img src="/images/events/posters/rikotaposter.webp" alt="Land of Rah: Children of the Mist poster">
+            <div class="upcoming-event-card__meta">
+            <h2>The Land of Rah Presents: Children of the Mist</h2>
+              <p>Tickets on Humanitix →</p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </div>

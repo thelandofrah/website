@@ -1,6 +1,6 @@
 +++
 title = "Yerdan Easter Egg Hunt"
-description = "$50 & $500 Cash prize still available"
+description = "$500 Cash prize still available"
 featured_image = "/images/art/comicbook/yerdanpage_Page_162.png"
 pages = [
   "/images/art/comicbook/yerdanpage_Page_162.png",
