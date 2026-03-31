@@ -90,18 +90,20 @@
   }
   .upcoming-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(460px, 640px));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 380px));
+    gap: 2rem;
     justify-content: center;
   }
   .upcoming-event-card {
     text-decoration: none;
     color: inherit;
+    width: 100%;
+    max-width: 380px;
   }
   .upcoming-event-card__inner {
     background: rgba(253,244,230,0.92);
     border-radius: 18px;
-    padding: 1.4rem;
+    padding: 1.1rem;
     box-shadow: 0 24px 48px rgba(0,0,0,0.18);
     animation: upcomingFloat 6s ease-in-out infinite;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
@@ -112,17 +114,17 @@
     display: block;
   }
   .upcoming-event-card__meta {
-    padding: 0.9rem 0.5rem 0.35rem;
+    padding: 0.8rem 0.35rem 0.2rem;
   }
   .upcoming-event-card__meta h2 {
     margin: 0 0 0.4rem;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
   }
   .upcoming-event-card__meta p {
     margin: 0;
     font-weight: 600;
     letter-spacing: 0.01em;
-    font-size: 1.05rem;
+    font-size: 0.98rem;
   }
   .upcoming-event-card:hover .upcoming-event-card__inner,
   .upcoming-event-card:focus .upcoming-event-card__inner {
@@ -243,6 +245,15 @@
           <img src="/images/events/posters/rikotaposter2.webp" alt="Land of Rah: Children of the Mist poster">
             <div class="upcoming-event-card__meta">
             <h2>The Land of Rah Presents: Children of the Mist</h2>
+              <p>Tickets on Humanitix →</p>
+            </div>
+          </div>
+        </a>
+        <a class="upcoming-event-card" href="https://events.humanitix.com/softgaze-gallery" target="_blank" rel="noopener">
+          <div class="upcoming-event-card__inner">
+          <img src="/images/events/posters/softgposter.webp" alt="Softgaze Gallery poster">
+            <div class="upcoming-event-card__meta">
+            <h2>Softgaze Gallery</h2>
               <p>Tickets on Humanitix →</p>
             </div>
           </div>
