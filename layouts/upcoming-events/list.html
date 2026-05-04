@@ -94,6 +94,17 @@
     gap: 2rem;
     justify-content: center;
   }
+  .upcoming-empty {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .upcoming-empty p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(0,0,0,0.72);
+  }
   .upcoming-event-card {
     text-decoration: none;
     color: inherit;
@@ -213,6 +224,8 @@
   }
 </style>
 
+{{ $upcomingEvents := where .RegularPages "Date" "ge" now }}
+
 <div class="upcoming-stage">
   <div class="upcoming-clouds" aria-hidden="true">
     <img class="upcoming-cloud upcoming-cloud--right upcoming-cloud--layer-2" src="/images/events/posters/100.webp" alt="">
@@ -239,26 +252,43 @@
           {{ with .Params.description }}<p class="upcoming-body">{{ . }}</p>{{ end }}
         </div>
       </div>
-      <div class="upcoming-grid">
-        <a class="upcoming-event-card" href="https://events.humanitix.com/land-of-rah-children-of-the-mist" target="_blank" rel="noopener">
-          <div class="upcoming-event-card__inner">
-          <img src="/images/events/posters/rikotaposter2.webp" alt="Land of Rah: Children of the Mist poster">
-            <div class="upcoming-event-card__meta">
-            <h2>The Land of Rah Presents: Children of the Mist</h2>
-              <p>Tickets on Humanitix →</p>
-            </div>
+      {{ if gt (len $upcomingEvents) 0 }}
+        <div class="upcoming-grid">
+          {{ range $upcomingEvents.ByDate }}
+            {{ $image := .Params.featured_image | default (.Params.cover | default .Params.image) }}
+            {{ $link := .Params.ticket_url | default (.Params.external_url | default .Params.link) }}
+            {{ $cta := .Params.cta | default "More info →" }}
+            {{ $eventTitle := .Title }}
+            {{ if $link }}
+              <a class="upcoming-event-card" href="{{ $link }}" {{ if strings.HasPrefix $link "http" }}target="_blank" rel="noopener"{{ end }}>
+                <div class="upcoming-event-card__inner">
+                  {{ with $image }}<img src="{{ . }}" alt="{{ $eventTitle }} poster">{{ end }}
+                  <div class="upcoming-event-card__meta">
+                    <h2>{{ .Title }}</h2>
+                    <p>{{ $cta }}</p>
+                  </div>
+                </div>
+              </a>
+            {{ else }}
+              <div class="upcoming-event-card">
+                <div class="upcoming-event-card__inner">
+                  {{ with $image }}<img src="{{ . }}" alt="{{ $eventTitle }} poster">{{ end }}
+                  <div class="upcoming-event-card__meta">
+                    <h2>{{ .Title }}</h2>
+                    {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
+                  </div>
+                </div>
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>
+      {{ else }}
+        <div class="upcoming-empty">
+          <div class="upcoming-card">
+            <p>No upcoming events right now. More strange happenings soon.</p>
           </div>
-        </a>
-        <a class="upcoming-event-card" href="https://events.humanitix.com/softgaze-gallery" target="_blank" rel="noopener">
-          <div class="upcoming-event-card__inner">
-          <img src="/images/events/posters/softgposter.webp" alt="Softgaze Gallery poster">
-            <div class="upcoming-event-card__meta">
-            <h2>Softgaze Gallery</h2>
-              <p>Tickets on Humanitix →</p>
-            </div>
-          </div>
-        </a>
-      </div>
+        </div>
+      {{ end }}
     </div>
   </div>
 </div>
