@@ -4,6 +4,7 @@
 {{ define "main" }}
 {{ $label := or .Params.collection_label .Params.grid_label "" }}
 {{ $isMap := eq .Section "maps" }}
+{{ $isEvents := eq .Section "events" }}
 <style>
   {{ if $isMap }}
   body.music-spectrum {
@@ -12,6 +13,10 @@
     background-image: url('/images/art/map/finalmap.png');
     background-repeat: repeat-y;
     background-size: 100% auto;
+  }
+  {{ else if $isEvents }}
+  body.music-spectrum {
+    background: #000;
   }
   {{ else }}
   body.music-spectrum {
@@ -44,6 +49,63 @@
     margin: 0 auto;
     padding: 2.5rem 1.5rem 4rem;
   }
+  {{ if $isEvents }}
+  .collection-stage {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 220px);
+  }
+  .collection-clouds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+  }
+  .collection-cloud {
+    position: absolute;
+    top: -8vh;
+    width: min(70vw, 900px);
+    height: auto;
+    opacity: 0.75;
+    filter: blur(0.3px);
+    animation: collectionCloudDrift 36s ease-in-out infinite;
+  }
+  .collection-cloud--left {
+    left: -10vw;
+    transform-origin: center left;
+  }
+  .collection-cloud--right {
+    right: -10vw;
+    transform-origin: center right;
+  }
+  .collection-cloud--layer-1 { top: -6vh; animation-duration: 42s; opacity: 0.75; }
+  .collection-cloud--layer-2 { top: 8vh; animation-duration: 36s; opacity: 0.68; }
+  .collection-cloud--layer-3 { top: 24vh; animation-duration: 40s; opacity: 0.62; }
+  .collection-cloud--layer-4 { top: 48vh; animation-duration: 44s; opacity: 0.62; }
+  .collection-cloud--layer-5 { top: 62vh; animation-duration: 38s; opacity: 0.68; }
+  .collection-cloud--mobile-only {
+    display: none;
+  }
+  .collection-cloud--bottom {
+    opacity: 0.78;
+  }
+  @keyframes collectionCloudDrift {
+    0% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(7vw) scale(1.02); }
+    100% { transform: translateX(0) scale(1); }
+  }
+  .collection-shell {
+    position: relative;
+    z-index: 2;
+    min-height: calc(100vh - 220px);
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 3.5rem) clamp(6rem, 12vw, 10rem);
+  }
+  {{ end }}
   .collection-hero-block {
     max-width: 840px;
     margin: 0 auto 2.5rem;
@@ -77,18 +139,72 @@
   .collection-grid {
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.25rem;
+    gap: 3.1rem 1.25rem;
     margin: 0;
+    align-items: start;
   }
   @media (max-width: 720px) {
     .collection-shell { padding-bottom: clamp(5rem, 18vw, 8rem); }
     .collection-grid { gap: 2.5rem 1.5rem; }
+    {{ if $isEvents }}
+    .collection-cloud {
+      width: 130vw;
+      opacity: 0.85;
+    }
+    .collection-stage {
+      min-height: calc(100vh + 420px);
+    }
+    .collection-clouds {
+      height: 100%;
+    }
+    @keyframes collectionCloudDrift {
+      0% { transform: translateX(0) scale(1); }
+      50% { transform: translateX(12vw) scale(1.03); }
+      100% { transform: translateX(0) scale(1); }
+    }
+    .collection-cloud--layer-2 { top: 16vh; opacity: 0.85; }
+    .collection-cloud--layer-3 { top: 30vh; opacity: 0.8; }
+    .collection-cloud--layer-4 { top: 52vh; opacity: 0.75; }
+    .collection-cloud--layer-5 { top: 70vh; opacity: 0.72; }
+    .collection-cloud--mobile-only {
+      display: block;
+    }
+    .collection-cloud--layer-6 { top: 84vh; opacity: 0.8; }
+    .collection-cloud--layer-7 { top: 98vh; opacity: 0.78; }
+    .collection-cloud--layer-8 { top: 112vh; opacity: 0.76; }
+    .collection-cloud--layer-9 { top: 126vh; opacity: 0.74; }
+    .collection-cloud--layer-10 { top: 140vh; opacity: 0.72; }
+    .collection-cloud--layer-11 { top: 24vh; opacity: 0.85; }
+    .collection-cloud--layer-12 { top: 150vh; opacity: 0.7; }
+    .collection-cloud--layer-13 { top: 162vh; opacity: 0.68; }
+    .collection-cloud--layer-14 { top: 172vh; opacity: 0.66; }
+    .collection-cloud--layer-15 { top: 184vh; opacity: 0.64; }
+    .collection-cloud--layer-6,
+    .collection-cloud--layer-8,
+    .collection-cloud--layer-10,
+    .collection-cloud--layer-12,
+    .collection-cloud--layer-14 {
+      animation-duration: 46s;
+      animation-delay: -6s;
+    }
+    .collection-cloud--layer-7,
+    .collection-cloud--layer-9,
+    .collection-cloud--layer-11,
+    .collection-cloud--layer-13,
+    .collection-cloud--layer-15 {
+      animation-duration: 34s;
+      animation-delay: -12s;
+    }
+    {{ end }}
   }
   .collection-card {
     text-decoration:none;
     color:inherit;
     display:block;
     width:100%;
+    height: 100%;
+    position: relative;
+    z-index: 0;
   }
   .collection-card__inner {
     background: rgba(253,244,230,0.92);
@@ -98,6 +214,8 @@
     transition: transform 0.45s cubic-bezier(0.25,0.8,0.25,1), box-shadow 0.45s ease, filter 0.35s ease;
     height:100%;
     will-change: transform;
+    display: flex;
+    flex-direction: column;
   }
   .collection-card img {
     width:100%;
@@ -111,6 +229,10 @@
     animation: collectionWiggle 0.85s ease-in-out infinite alternate;
     box-shadow:0 25px 40px rgba(0,0,0,0.18);
     filter:brightness(1.03) saturate(1.05);
+  }
+  .collection-card:hover,
+  .collection-card:focus {
+    z-index: 2;
   }
   @keyframes collectionDrop {
     0% { transform: translateY(-90px); opacity:0; }
@@ -171,8 +293,28 @@
   }
   {{ end }}
 </style>
+{{ if $isEvents }}
+<div class="collection-stage">
+  <div class="collection-clouds" aria-hidden="true">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-2" src="/images/events/posters/100.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-1" src="/images/events/posters/52.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-4" src="/images/events/posters/38.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-3" src="/images/events/posters/38.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-5" src="/images/events/posters/43.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-7 collection-cloud--mobile-only" src="/images/events/posters/52.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-6 collection-cloud--mobile-only" src="/images/events/posters/43.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-11 collection-cloud--mobile-only" src="/images/events/posters/100.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-8 collection-cloud--mobile-only" src="/images/events/posters/38.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-9 collection-cloud--mobile-only" src="/images/events/posters/100.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-10 collection-cloud--mobile-only collection-cloud--bottom" src="/images/events/posters/52.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-12 collection-cloud--mobile-only collection-cloud--bottom" src="/images/events/posters/43.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-13 collection-cloud--mobile-only collection-cloud--bottom" src="/images/events/posters/100.webp" alt="">
+    <img class="collection-cloud collection-cloud--left collection-cloud--layer-14 collection-cloud--mobile-only collection-cloud--bottom" src="/images/events/posters/43.webp" alt="">
+    <img class="collection-cloud collection-cloud--right collection-cloud--layer-15 collection-cloud--mobile-only collection-cloud--bottom" src="/images/events/posters/52.webp" alt="">
+  </div>
+{{ end }}
 <div class="collection-shell" {{ if $isMap }}style="max-width:1200px;"{{ end }}>
-  <div class="collection-hero-block hero-drop" {{ if $isMap }}style="background:rgba(253,244,230,0.92);border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,0.15);padding:2.5rem;"{{ end }}>
+  <div class="collection-hero-block hero-drop" {{ if or $isMap $isEvents }}style="background:rgba(253,244,230,0.92);border-radius:24px;box-shadow:0 20px 45px rgba(0,0,0,0.15);padding:2.5rem;"{{ end }}>
     <h1 class="collection-hero-title">{{ .Title }}</h1>
     {{ with .Params.description }}
       <p class="collection-hero-description">{{ . }}</p>
@@ -229,4 +371,5 @@
     </div>
   {{ end }}
 </div>
+{{ if $isEvents }}</div>{{ end }}
 {{ end }}

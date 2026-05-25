@@ -205,7 +205,7 @@
 </style>
   <main class="mw8 center ph4 pv5 gallery-page-shell">
     <div class="gallery-grid">
-      {{ range .Pages }}
+      {{ range .RegularPages }}
         <a href="{{ .RelPermalink }}" class="gallery-card">
           <div class="gallery-card__inner">
             {{ with .Params.featured_image }}

@@ -5,6 +5,10 @@
 {{ define "main" }}
 {{ $galleryDir := .Params.gallery_dir | default (printf "images/events/%s" .File.TranslationBaseName) }}
 {{ $images := slice }}
+{{ $rotateRight := .Params.rotate_right | default (slice) }}
+{{ $rotateLeft := .Params.rotate_left | default (slice) }}
+{{ $rotate180 := .Params.rotate_180 | default (slice) }}
+{{ $excludeImages := .Params.exclude_images | default (slice) }}
 {{ if $galleryDir }}
   {{ $readPath := printf "static/%s" $galleryDir }}
   {{ if fileExists $readPath }}
@@ -12,7 +16,7 @@
     {{ range readDir $readPath }}
       {{ if not .IsDir }}
         {{ $ext := lower (path.Ext .Name) }}
-        {{ if in $allowedExt $ext }}
+        {{ if and (in $allowedExt $ext) (not (in $excludeImages .Name)) }}
           {{ $images = $images | append (printf "/%s/%s" $galleryDir .Name) }}
         {{ end }}
       {{ end }}
@@ -243,8 +247,17 @@
     <div class="event-gallery" data-gallery>
       <div class="event-gallery__viewport">
         {{ range $index, $img := $images }}
+          {{ $filename := path.Base $img }}
+          {{ $extraClass := "" }}
+          {{ if in $rotateRight $filename }}
+            {{ $extraClass = " rotate-90" }}
+          {{ else if in $rotateLeft $filename }}
+            {{ $extraClass = " rotate-270" }}
+          {{ else if in $rotate180 $filename }}
+            {{ $extraClass = " rotate-180" }}
+          {{ end }}
           <figure class="event-frame{{ if eq $index 0 }} is-active{{ end }}" data-frame data-index="{{ $index }}">
-            <img src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy">
+            <img class="{{ strings.TrimSpace $extraClass }}" src="{{ $img }}" alt="{{ printf "%s photo %d" $.Title (add $index 1) }}" loading="lazy"{{ if $extraClass }} data-fixed-rotation="true"{{ end }}>
           </figure>
         {{ end }}
       </div>
@@ -343,6 +356,7 @@
   }
 
   function orientImage(img) {
+    if (img.dataset.fixedRotation === "true") return;
     const src = img.getAttribute("src");
     if (!src) return;
     fetch(src)

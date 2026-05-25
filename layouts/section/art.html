@@ -136,8 +136,9 @@
 
     <h2 class="art-gallery-heading">Galleries</h2>
 
+    {{ $galleries := sort .Sections "Weight" "desc" }}
     <div class="art-grid">
-      {{ range .Sections}}
+      {{ range $galleries }}
         <a href="{{ .RelPermalink }}" class="art-card">
           <div class="art-card__inner">
 
