@@ -4,7 +4,7 @@ cover: "/images/art/albumcovers/slipwaycover.webp"
 featureImage: "/images/art/albumcovers/slipwaycover.webp"
 weight: 16
 snippet: "Opening up the Courtyard"
-date: 2020-01-01
+date: 2026-01-01
 category: "album"
 ---
 
