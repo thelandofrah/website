@@ -1,0 +1,54 @@
+# Ask known AI training, AI search, and AI retrieval bots not to crawl any content.
+# These voluntary rules are not access controls; some bots may ignore them.
+# Review periodically as crawler names and provider policies change.
+
+# Meta AI
+User-agent: meta-externalagent
+User-agent: meta-externalfetcher
+User-agent: meta-webindexer
+User-agent: meta-externalads
+User-agent: FacebookBot
+Disallow: /
+
+# OpenAI
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+Disallow: /
+
+# Anthropic (including older crawler names)
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: anthropic-ai
+User-agent: Claude-Web
+Disallow: /
+
+# Google and Apple AI-use opt-outs; ordinary search crawlers remain allowed.
+# These tokens do not opt out of every AI feature in search engines.
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Disallow: /
+
+# Other AI crawlers and datasets
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Amazonbot
+User-agent: Diffbot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: AI2Bot
+User-agent: Ai2Bot-Dolma
+User-agent: Omgilibot
+User-agent: Omgili
+User-agent: ImagesiftBot
+User-agent: YouBot
+Disallow: /
+
+# Allow other crawlers, including ordinary search and social link previews.
+User-agent: *
+Allow: /
+
+Sitemap: https://thelandofrah.com/sitemap.xml

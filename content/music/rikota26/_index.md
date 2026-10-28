@@ -1,5 +1,5 @@
 ---
-title: "Live @ Rikota 26"
+title: "Live @ Rikota 26'"
 cover: "/images/art/albumcovers/rikota26cover.webp"
 featureImage: "/images/art/albumcovers/rikota26cover.webp"
 weight: 18
