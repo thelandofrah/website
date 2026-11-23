@@ -234,6 +234,37 @@
   .music-main-title {
     font-size: clamp(3rem, 8vw, 4.8rem);
     margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+  }
+  .music-main-title__text {
+    display: inline-block;
+    animation: musicWave 15s infinite;
+  }
+  .music-main-title__pixels {
+    position: absolute;
+    inset: 0;
+    color: #8a4867;
+    pointer-events: none;
+    background: repeating-conic-gradient(#000 0 25%, transparent 0 50%) 0 0 / 0.1em 0.1em;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: musicPixels 15s steps(2, end) infinite;
+  }
+  @keyframes musicPixels {
+    0%, 5%, 34%, 100% { opacity: 0; transform: translate(0); }
+    8%, 13%, 20%, 29% { opacity: 1; transform: translate(-0.015em, 0.015em); }
+    11%, 17%, 25%, 32% { opacity: 0.5; transform: translate(0.025em, -0.01em); }
+  }
+  @keyframes musicWave {
+    0%, 25%, 67%, 100% { filter: none; }
+    35%, 56% { filter: url(#music-wave); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .music-main-title__text, .music-main-title__pixels { animation: none; }
+    .music-main-title__pixels { display: none; }
   }
   .music-main-body {
     font-size: 1.2rem;
@@ -368,7 +399,17 @@
     {{ if $isMain }}
       <div class="music-main-hero">
         <div class="music-main-card">
-          <h1 class="music-main-title">{{ .Title }}</h1>
+          <h1 class="music-main-title">
+            <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+              <filter id="music-wave" x="-20%" y="-30%" width="140%" height="160%">
+                <feTurbulence type="turbulence" baseFrequency="0.025 0.08" numOctaves="2" seed="3" result="waves">
+                  <animate attributeName="baseFrequency" values="0.025 0.08;0.04 0.045;0.025 0.08" dur="3s" repeatCount="indefinite" />
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="waves" scale="6" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </svg>
+            <span class="music-main-title__text">{{ .Title }}</span><span class="music-main-title__pixels" aria-hidden="true">{{ .Title }}</span>
+          </h1>
           {{ with .Content }}
             <div class="music-main-body">
               {{ . }}
@@ -401,7 +442,7 @@
         {{ if $img }}
           <img src="{{ $img }}"
                alt="{{ .Title }}"
-               style="width:100%;height:auto;border-radius:10px;">
+               style="width:100%;{{ if eq (path.Base (path.Clean .File.Dir)) "studio-presence-opening-night" }}aspect-ratio:1;object-fit:cover;{{ else }}height:auto;{{ end }}border-radius:10px;">
         {{ end }}
 
         <h3 style="margin-top:0.75rem;font-size:1.1rem;">{{ .Title }}</h3>
